@@ -16,5 +16,7 @@ export function useMediaQuery(query: string): boolean {
   )
 }
 
-/** Debajo de este ancho el directorio y el mapa pasan a pestañas "Lista | Mapa". Igual que en index.css. */
-export const COMPACT_QUERY = "(max-width: 860px)"
+/** Debajo de este ancho la ficha del módulo del mapa va debajo del mapa. Igual que en `styles/mapa.css`. */
+export const STACKED_QUERY = "(max-width: 767px)"
+
+export const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"

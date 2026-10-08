@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import Icon from "../components/Icon"
-import { CATEGORIES, CATEGORY_LIST, type Location } from "../data/locations"
+import type { Location } from "../data/locations"
 import type { FocusRequest } from "../hooks/useDirectory"
 import { GRAN_ROSARIO_BOUNDS, isWithin, type LatLng } from "../lib/geo"
 import type { Padding } from "./controller"
@@ -15,21 +15,17 @@ interface MapViewProps {
   /** Aumenta cada vez que se obtiene la ubicación del usuario. */
   userLocateSeq: number
   locating: boolean
-  /** El contenedor se ve (en mobile, pestaña "Mapa" activa). */
+  /** El contenedor se ve (si se oculta, al volver a mostrarse se recalcula su tamaño). */
   active: boolean
   onSelect(id: number): void
   onLocate(): void
-  /** En mobile, cuando el mapa no está disponible, ofrece volver a la lista. */
-  onShowList?(): void
-  /** Ficha del punto seleccionado (se mide para que la cámara no la tape). */
-  detail: ReactNode
-  /** Avisos (por ejemplo, de geolocalización). */
+  /** Avisos sobre el mapa (geolocalización, "Ver ficha de…" en mobile). */
   notice?: ReactNode
 }
 
 const EDGE = 24
 
-/** Los pines se apoyan en la coordenada y crecen hacia arriba: lugar extra para que no los tape la barra. */
+/** Los pines se apoyan en la coordenada y crecen hacia arriba: lugar extra arriba para que entren enteros. */
 const PIN_CLEARANCE = 56
 
 export default function MapView(props: MapViewProps) {
@@ -43,17 +39,13 @@ export default function MapView(props: MapViewProps) {
     active,
     onSelect,
     onLocate,
-    onShowList,
-    detail,
     notice,
   } = props
 
   const frameRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const topbarRef = useRef<HTMLDivElement>(null)
   const controlsRef = useRef<HTMLDivElement>(null)
-  const detailRef = useRef<HTMLDivElement>(null)
-  /** Último pin clickeado: al abrirse su ficha, se corre la cámara si lo tapa. */
+  /** Último pin clickeado: si quedó tapado por los controles o fuera de cuadro, se corre la cámara. */
   const pendingEnsure = useRef<number | null>(null)
   const handleMapSelect = useCallback(
     (id: number) => {
@@ -69,13 +61,11 @@ export default function MapView(props: MapViewProps) {
   )
 
   const [fitSeq, setFitSeq] = useState(0)
-  /** Zona libre del mapa: descuenta la barra superior, los controles y la ficha abierta. */
+  /** Zona libre del mapa: descuenta los controles y la atribución. */
   const getPadding = useCallback((): Padding => {
-    const padding = { top: EDGE, right: EDGE, bottom: EDGE, left: EDGE }
+    const padding = { top: EDGE + PIN_CLEARANCE, right: EDGE, bottom: EDGE, left: EDGE }
     const frame = frameRef.current?.getBoundingClientRect()
     if (!frame) return padding
-    const topbar = topbarRef.current?.getBoundingClientRect()
-    padding.top = (topbar ? topbar.bottom - frame.top : 0) + PIN_CLEARANCE
     const controls = controlsRef.current?.getBoundingClientRect()
     if (controls && controls.width > 0) {
       // Abajo (escritorio) se descuentan del borde inferior; arriba a un costado (mobile), del lateral.
@@ -99,18 +89,6 @@ export default function MapView(props: MapViewProps) {
       attribution && attribution.height > 0 ? attribution.height : 0
     if (attributionHeight)
       padding.bottom = Math.max(padding.bottom, attributionHeight + 12)
-    const panel = detailRef.current?.firstElementChild?.getBoundingClientRect()
-    if (panel && panel.width > 0) {
-      if (panel.width < frame.width * 0.6)
-        padding.right = Math.max(padding.right, frame.right - panel.left + EDGE)
-      // Panel inferior: la atribución se apoya sobre él, así que su alto también se descuenta.
-      else
-        padding.bottom = Math.max(
-          padding.bottom,
-          frame.bottom - panel.top + attributionHeight + EDGE,
-        )
-    }
-
     return padding
   }, [])
 
@@ -134,12 +112,12 @@ export default function MapView(props: MapViewProps) {
     controller?.setUser(userPosition)
   }, [controller, userPosition])
 
-  // Al volverse visible (pestaña "Mapa"), el contenedor cambió de tamaño.
+  // Al volverse visible, el contenedor cambió de tamaño.
   useEffect(() => {
     if (active) controller?.resize()
   }, [active, controller])
 
-  // "Explorar" desde el directorio: volar al punto. Tiene prioridad sobre un encuadre pendiente.
+  // Lugar elegido en el buscador: volar al punto. Tiene prioridad sobre un encuadre pendiente.
   useEffect(() => {
     if (
       !controller ||
@@ -150,7 +128,7 @@ export default function MapView(props: MapViewProps) {
       return
     fittedKey.current = latest.current.fitKey
     pendingEnsure.current = null
-    // La ficha recién se abrió: esperamos un frame para medirla.
+    // Esperamos un frame a que se apliquen los datos nuevos.
     const frame = requestAnimationFrame(() => {
       handledFocus.current = focusRequest.seq
       const target = latest.current.locations.find(
@@ -179,7 +157,7 @@ export default function MapView(props: MapViewProps) {
     return () => window.clearTimeout(timer)
   }, [controller, active, fitKey, getPadding])
 
-  // Click en un pin: si la ficha que se abre lo tapa, se corre la cámara (sin cambiar el zoom).
+  // Click en un pin: si quedó tapado por los controles, se corre la cámara (sin cambiar el zoom).
   useEffect(() => {
     if (
       !controller ||
@@ -214,48 +192,14 @@ export default function MapView(props: MapViewProps) {
       controller.focus(userPosition, getPadding(), 14)
   }, [controller, active, userPosition, userLocateSeq, getPadding])
 
-  // La atribución (obligatoria) se apoya sobre la ficha: publicamos su alto actual como variable CSS.
-  useEffect(() => {
-    const frame = frameRef.current
-    const panel = detailRef.current?.firstElementChild
-    if (!frame || !(panel instanceof HTMLElement)) return
-    const update = () =>
-      frame.style.setProperty("--sheet-h", `${panel.offsetHeight}px`)
-    update()
-    const observer =
-      "ResizeObserver" in window ? new ResizeObserver(update) : null
-    observer?.observe(panel)
-    return () => {
-      observer?.disconnect()
-      frame.style.removeProperty("--sheet-h")
-    }
-  }, [selectedId])
-
   const ready = status === "ready" && controller !== null
   return (
     <div className="map-canvas" ref={frameRef} data-status={status}>
-      <div className="map-topbar" ref={topbarRef}>
-        <span>
-          <strong>ROSARIO</strong> / SANTA FE
-        </span>
-        <ul className="map-legend" aria-label="Referencias">
-          {CATEGORY_LIST.map((category) => (
-            <li key={category}>
-              <i
-                className={`legend-dot type-${CATEGORIES[category].slug}`}
-                aria-hidden="true"
-              />
-              <span>{CATEGORIES[category].legend}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
       <div ref={containerRef} className="map-gl" />
-      <span className="map-texture" aria-hidden="true" />
       {(status === "idle" || status === "loading") && (
         <div className="map-state" role="status">
           <span className="map-state-icon is-loading" aria-hidden="true">
-            <Icon name="sprout" size={28} />
+            <Icon name="pinParque" size={30} strokeWidth={1.5} />
           </span>
           <strong>Cargando el mapa…</strong>
         </div>
@@ -275,22 +219,13 @@ export default function MapView(props: MapViewProps) {
             {errorReason === "offline"
               ? "Revisá tu conexión a internet y probá de nuevo."
               : "Puede ser un problema momentáneo del servidor de mapas."}{" "}
-            El directorio sigue funcionando con toda la información de cada
-            punto.
+            El buscador y la ficha siguen funcionando con toda la información
+            de cada lugar.
           </p>
           <div className="map-state-actions">
             <button type="button" className="map-state-button" onClick={retry}>
               <Icon name="refresh" size={18} /> Reintentar
             </button>
-            {onShowList && (
-              <button
-                type="button"
-                className="map-state-link"
-                onClick={onShowList}
-              >
-                Ver la lista
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -303,20 +238,9 @@ export default function MapView(props: MapViewProps) {
           <strong>Este navegador no puede mostrar el mapa</strong>
           <p>
             El mapa interactivo necesita WebGL, que está desactivado o no está
-            disponible en este dispositivo. Usá el directorio: tiene toda la
-            información de cada punto.
+            disponible en este dispositivo. Usá el buscador: la ficha muestra
+            toda la información de cada lugar.
           </p>
-          {onShowList && (
-            <div className="map-state-actions">
-              <button
-                type="button"
-                className="map-state-button"
-                onClick={onShowList}
-              >
-                <Icon name="list" size={18} /> Ver la lista
-              </button>
-            </div>
-          )}
         </div>
       )}
 
@@ -384,9 +308,6 @@ export default function MapView(props: MapViewProps) {
       )}
 
       {notice}
-      <div className="map-detail-slot" ref={detailRef}>
-        {detail}
-      </div>
     </div>
   )
 }

@@ -129,20 +129,21 @@ export function addPauLayers(map: MapLibreMap, fonts: StyleFonts): void {
   // El círculo crece con la cantidad de puntos del grupo.
   const clusterRadius = (extra: number): ExpressionSpecification => [
     "+",
-    ["step", ["get", "point_count"], 17, 5, 21, 12, 26],
+    ["step", ["get", "point_count"], 22, 5, 25, 12, 29],
     extra,
   ]
 
-  // Grupos: círculo Amarillo 6PM, filete cianotipia y un anillo exterior translúcido.
+  // Grupos: círculo Verde CAR con anillo crema de 3 px y un halo exterior translúcido. Radio mínimo
+  // de 22 px: el área táctil del grupo mide al menos 44 px.
   map.addLayer({
     id: LAYER_CLUSTER_HALO,
     type: "circle",
     source: SOURCE_POINTS,
     filter: ["has", "point_count"],
     paint: {
-      "circle-color": PALETTE.mustard,
-      "circle-opacity": 0.28,
-      "circle-radius": clusterRadius(8),
+      "circle-color": PALETTE.verdeCar,
+      "circle-opacity": 0.22,
+      "circle-radius": clusterRadius(7),
     },
   })
 
@@ -152,10 +153,10 @@ export function addPauLayers(map: MapLibreMap, fonts: StyleFonts): void {
     source: SOURCE_POINTS,
     filter: ["has", "point_count"],
     paint: {
-      "circle-color": PALETTE.mustard,
+      "circle-color": PALETTE.verdeCar,
       "circle-radius": clusterRadius(0),
-      "circle-stroke-color": PALETTE.cyan,
-      "circle-stroke-width": 2,
+      "circle-stroke-color": PALETTE.blancoAjito,
+      "circle-stroke-width": 3,
     },
   })
 
@@ -167,11 +168,11 @@ export function addPauLayers(map: MapLibreMap, fonts: StyleFonts): void {
     layout: {
       "text-field": ["get", "point_count_abbreviated"],
       "text-font": fonts.bold,
-      "text-size": ["step", ["get", "point_count"], 14, 12, 16],
+      "text-size": ["step", ["get", "point_count"], 15, 12, 17],
       "text-allow-overlap": true,
       "text-ignore-placement": true,
     },
-    paint: { "text-color": PALETTE.cyan },
+    paint: { "text-color": PALETTE.blancoAjito },
   })
 
   map.addLayer({
@@ -179,8 +180,8 @@ export function addPauLayers(map: MapLibreMap, fonts: StyleFonts): void {
     type: "circle",
     source: SOURCE_USER,
     paint: {
-      "circle-color": PALETTE.paper,
-      "circle-opacity": 0.22,
+      "circle-color": PALETTE.azulCianotipia,
+      "circle-opacity": 0.18,
       "circle-radius": 16,
     },
   })
@@ -190,9 +191,9 @@ export function addPauLayers(map: MapLibreMap, fonts: StyleFonts): void {
     type: "circle",
     source: SOURCE_USER,
     paint: {
-      "circle-color": PALETTE.paper,
+      "circle-color": PALETTE.azulCianotipia,
       "circle-radius": 6,
-      "circle-stroke-color": PALETTE.mustard,
+      "circle-stroke-color": PALETTE.blancoAjito,
       "circle-stroke-width": 3,
     },
   })
@@ -313,7 +314,7 @@ export function bindInteractions(
 
   showFor(LAYER_CLUSTERS, 30, (event) => {
     const count = Number(event.features?.[0]?.properties?.point_count ?? 0)
-    return `${count} puntos · click para acercar`
+    return `${count} lugares · click para acercar`
   })
 
   map.on("dragstart", () => tooltip.hide())

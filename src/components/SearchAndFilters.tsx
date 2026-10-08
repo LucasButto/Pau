@@ -1,150 +1,184 @@
-import { useId, type FormEvent } from "react"
+import { useId, useRef, useState, type KeyboardEvent } from "react"
 import { CATEGORIES, CATEGORY_LIST } from "../data/locations"
-import type { CategoryFilter } from "../hooks/useDirectory"
+import type { CategoryFilter, DirectoryEntry } from "../hooks/useDirectory"
 import Icon from "./Icon"
 
 interface SearchAndFiltersProps {
-  /** "hero": acceso rápido que lleva al mapa. "map": barra dentro del módulo del mapa. */
-  variant: "hero" | "map"
   query: string
   onQueryChange(value: string): void
   category: CategoryFilter
   onCategoryChange(value: CategoryFilter): void
-  /** Hero: Enter, la flecha o un filtro llevan a los resultados. */
-  onGoToResults?(): void
-  /** Barra del mapa: conteo y limpiar. */
-  resultCount?: number
-  total?: number
-  hasActiveFilters?: boolean
-  onClear?(): void
+  /** Coincidencias de la búsqueda actual (también son las sugerencias). */
+  results: DirectoryEntry[]
+  /** Se eligió una sugerencia: seleccionar el lugar y volar hasta él. */
+  onChoose(id: number): void
 }
 
-interface FilterOption {
-  value: CategoryFilter
-  label: string
-}
-
-const FILTERS: FilterOption[] = [
-  { value: "all", label: "Todos" },
-  ...CATEGORY_LIST.map((category) => ({ value: category, label: category })),
+const FILTERS: { value: CategoryFilter; label: string }[] = [
+  { value: "all", label: "Todo" },
+  ...CATEGORY_LIST.map((category) => ({ value: category, label: CATEGORIES[category].label })),
 ]
 
 /**
- * Buscador + filtros. Se usa dos veces (hero y módulo del mapa) sobre el mismo estado, con el
- * mismo lenguaje visual, para que se lean como un único sistema.
+ * Barra superior del módulo del mapa: buscador "Buscá por nombre" con sugerencias (patrón ARIA
+ * combobox + listbox) y chips de categoría. Reemplaza al directorio en lista como forma de recorrer
+ * los lugares con teclado: ↑↓ para moverse, Enter para elegir, Esc para cerrar.
  */
-export default function SearchAndFilters(props: SearchAndFiltersProps) {
-  const {
-    variant,
-    query,
-    onQueryChange,
-    category,
-    onCategoryChange,
-    onGoToResults,
-  } = props
-
+export default function SearchAndFilters({
+  query,
+  onQueryChange,
+  category,
+  onCategoryChange,
+  results,
+  onChoose,
+}: SearchAndFiltersProps) {
+  const [open, setOpen] = useState(false)
+  const [active, setActive] = useState(-1)
   const inputId = useId()
-  const isHero = variant === "hero"
-  const submit = (event: FormEvent) => {
-    event.preventDefault()
-    onGoToResults?.()
+  const listId = useId()
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const expanded = open && results.length > 0
+  const optionId = (index: number) => `${listId}-opcion-${index}`
+
+  const close = () => {
+    setOpen(false)
+    setActive(-1)
   }
 
-  const pickCategory = (value: CategoryFilter) => {
-    onCategoryChange(value)
-    if (isHero) onGoToResults?.()
+  const choose = (entry: DirectoryEntry) => {
+    onQueryChange(entry.location.name)
+    onChoose(entry.location.id)
+    close()
+  }
+
+  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault()
+      if (!results.length) return
+      setOpen(true)
+      if (!open) {
+        setActive(event.key === "ArrowDown" ? 0 : results.length - 1)
+        return
+      }
+      const step = event.key === "ArrowDown" ? 1 : -1
+      setActive((index) => (index + step + results.length) % results.length)
+    } else if (event.key === "Enter") {
+      // Sin opción marcada, Enter elige la primera coincidencia.
+      const entry = results[active] ?? (query.trim() ? results[0] : undefined)
+      if (!entry) return
+      event.preventDefault()
+      choose(entry)
+    } else if (event.key === "Escape") {
+      if (expanded) {
+        event.preventDefault()
+        close()
+      } else if (query) {
+        event.preventDefault()
+        onQueryChange("")
+      }
+    } else if (event.key === "Tab") close()
   }
 
   return (
-    <div className={`search-filters search-filters-${variant}`}>
-      <form
-        className="search-box"
-        role="search"
-        onSubmit={submit}
-        aria-label={
-          isHero
-            ? "Buscar puntos en el mapa"
-            : "Buscar en el directorio y el mapa"
-        }
+    <div className="map-filters">
+      <div
+        className="map-search"
+        ref={wrapRef}
+        onBlur={(event) => {
+          if (!wrapRef.current?.contains(event.relatedTarget as Node)) close()
+        }}
       >
         <label className="sr-only" htmlFor={inputId}>
-          Buscar por barrio, parque huerta o feria
+          Buscá por nombre
         </label>
-        <Icon name="search" size={isHero ? 22 : 20} />
+        <Icon name="search" size={20} />
         <input
+          ref={inputRef}
           id={inputId}
-          type="search"
+          type="text"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={expanded}
+          aria-controls={listId}
+          aria-activedescendant={expanded && active >= 0 ? optionId(active) : undefined}
           autoComplete="off"
           enterKeyHint="search"
+          spellCheck={false}
+          placeholder="Buscá por nombre"
           value={query}
-          onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Barrio, parque o feria"
+          onChange={(event) => {
+            onQueryChange(event.target.value)
+            setOpen(event.target.value.trim() !== "")
+            setActive(-1)
+          }}
+          onKeyDown={onKeyDown}
         />
-        {isHero ? (
+        {query && (
           <button
-            type="submit"
-            className="search-submit"
-            aria-label="Buscar en el mapa"
+            type="button"
+            className="map-search-clear"
+            aria-label="Borrar búsqueda"
+            onClick={() => {
+              onQueryChange("")
+              close()
+              inputRef.current?.focus()
+            }}
           >
-            <span className="search-submit-label">Buscar</span>
-            <Icon name="arrow" size={20} />
+            <Icon name="close" size={18} />
           </button>
-        ) : (
-          query && (
-            <button
-              type="button"
-              className="search-clear"
-              aria-label="Borrar búsqueda"
-              onClick={() => onQueryChange("")}
-            >
-              <Icon name="close" size={18} />
-            </button>
-          )
         )}
-      </form>
-      <div
-        className="filter-row"
-        role="group"
-        aria-label="Filtrar por tipo de punto"
-      >
+        <ul id={listId} role="listbox" aria-label="Lugares que coinciden" className="map-suggestions" hidden={!expanded}>
+          {results.map((entry, index) => {
+            const { location } = entry
+            const meta = CATEGORIES[location.type]
+            return (
+              <li
+                key={location.id}
+                id={optionId(index)}
+                role="option"
+                aria-selected={index === active}
+                className={index === active ? "is-active" : undefined}
+                // mousedown: que el input no pierda el foco antes del click
+                onMouseDown={(event) => event.preventDefault()}
+                onMouseMove={() => setActive(index)}
+                onClick={() => choose(entry)}
+              >
+                <span className={`category-icon type-${meta.slug}`} aria-hidden="true">
+                  <Icon name={meta.icon} size={18} strokeWidth={1.5} />
+                </span>
+                <span className="suggestion-text">
+                  <strong>{location.name}</strong>
+                  <span>
+                    {meta.longLabel} · {location.district}
+                  </span>
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {results.length === 1 ? "1 lugar en el mapa" : `${results.length} lugares en el mapa`}
+      </p>
+      <div className="chip-row" role="group" aria-label="Filtrar por categoría">
         {FILTERS.map(({ value, label }) => (
           <button
             aria-pressed={category === value}
-            className={
-              category === value ? "filter-pill is-active" : "filter-pill"
-            }
+            className={category === value ? "chip is-active" : "chip"}
             key={value}
-            onClick={() => pickCategory(value)}
+            onClick={() => onCategoryChange(value)}
             type="button"
+            {...(value !== "all" && CATEGORIES[value].longLabel !== label
+              ? { "aria-label": CATEGORIES[value].longLabel }
+              : {})}
           >
-            {value !== "all" && (
-              <span
-                className={`filter-dot type-${CATEGORIES[value].slug}`}
-                aria-hidden="true"
-              />
-            )}
+            {value !== "all" && <span className={`chip-dot type-${CATEGORIES[value].slug}`} aria-hidden="true" />}
             {label}
           </button>
         ))}
       </div>
-      {!isHero && (
-        <div className="results-bar">
-          <p className="results-count" aria-live="polite" aria-atomic="true">
-            <strong>{props.resultCount}</strong>{" "}
-            {props.resultCount === 1 ? "punto" : "puntos"}
-            {props.hasActiveFilters && <span> de {props.total}</span>}
-          </p>
-          <button
-            type="button"
-            className="clear-filters"
-            onClick={props.onClear}
-            disabled={!props.hasActiveFilters}
-          >
-            <Icon name="close" size={16} />
-            Limpiar filtros
-          </button>
-        </div>
-      )}
     </div>
   )
 }
