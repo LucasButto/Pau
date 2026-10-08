@@ -15,7 +15,9 @@
  * Cambiar este valor alcanza: de acá salen las rutas, el menú, los links del footer, el sitemap y
  * los canonical.
  */
-export const HOME_PAGE: "raices-vecinas" | "institucional" = "raices-vecinas"
+export type HomePage = "raices-vecinas" | "institucional"
+
+export const HOME_PAGE = "raices-vecinas" as HomePage
 
 export const SITE_NAME = "PAU Rosario"
 
