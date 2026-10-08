@@ -67,7 +67,7 @@ export const PAGES: Record<PageId, PageConfig> = {
     preload: {
       type: "image/avif",
       srcset: "/img/collage-hero-600.avif 600w, /img/collage-hero-900.avif 900w, /img/collage-hero-1086.avif 1086w",
-      sizes: "(max-width: 767px) min(520px, 100vw), 46vw",
+      sizes: "(max-width: 767px) min(520px, calc(100vw - 40px)), 46vw",
     },
   },
   institucional: {

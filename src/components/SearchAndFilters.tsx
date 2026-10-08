@@ -170,8 +170,9 @@ export default function SearchAndFilters({
             key={value}
             onClick={() => onCategoryChange(value)}
             type="button"
+            // El nombre accesible empieza con el texto visible: "CAR, Centro Agroecológico Rosario".
             {...(value !== "all" && CATEGORIES[value].longLabel !== label
-              ? { "aria-label": CATEGORIES[value].longLabel }
+              ? { "aria-label": `${label}, ${CATEGORIES[value].longLabel.replace(/\s*\(.*\)$/, "")}` }
               : {})}
           >
             {value !== "all" && <span className={`chip-dot type-${CATEGORIES[value].slug}`} aria-hidden="true" />}
