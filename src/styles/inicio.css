@@ -90,7 +90,7 @@
 .plaque-controls { display: flex; align-items: center; gap: 6px; }
 .plaque-dots { display: flex; }
 .plaque-dots button {
-  width: 32px; height: 44px; padding: 0; border: 0; background: transparent; display: grid; place-items: center;
+  width: 44px; height: 44px; padding: 0; border: 0; background: transparent; display: grid; place-items: center;
 }
 .plaque-dots button::before {
   content: ""; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--impact-ink); transition: background-color .2s, transform .2s;

@@ -159,6 +159,17 @@ export default function seo(): Plugin {
         return isBuild ? stripComments(renderPage(template, siteUrl, PAGE_LIST[0])) : renderPage(template, siteUrl, pageForUrl(ctx.originalUrl))
       },
     },
+    // `vite preview` responde como Vercel: cada ruta con su propio HTML (dist/<ruta>/index.html).
+    configurePreviewServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const pathname = (req.url ?? "/").split(/[?#]/)[0].replace(/\/+$/, "")
+        const page = PAGE_LIST.find((candidate) => candidate.path !== "/" && candidate.path === pathname)
+        const file = page ? path.join(outDir, page.path.replace(/^\//, ""), "index.html") : ""
+        if (!file || !fs.existsSync(file)) return next()
+        res.setHeader("Content-Type", "text/html; charset=utf-8")
+        res.end(fs.readFileSync(file))
+      })
+    },
     writeBundle(options) {
       const dir = options.dir ?? outDir
       // Una copia del HTML por cada ruta que no es la principal (la principal es dist/index.html).

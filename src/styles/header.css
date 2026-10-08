@@ -9,7 +9,7 @@
   height: 100%; width: min(100% - 2 * var(--pad-x), var(--container)); margin-inline: auto;
   display: flex; align-items: center; gap: clamp(16px, 2.5vw, 48px);
 }
-.brand-link { flex: none; display: block; border-radius: 4px; }
+.brand-link { flex: none; min-height: 44px; display: flex; align-items: center; border-radius: 4px; }
 .brand-link img { width: auto; height: 58px; }
 
 .main-nav { margin-left: auto; }
