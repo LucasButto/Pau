@@ -44,11 +44,11 @@ function PostCard({ post }: { post: Posteo }) {
     </span>
   )
 
+  // Sin link todavía: solo la imagen (sin badge, sin link y con cursor normal). El tinte amarillo del hover se mantiene.
   if (!post.href) {
     return (
-      <div className="post-card is-pending" role={post.imagen ? undefined : "img"} aria-label={post.imagen ? undefined : post.alt}>
+      <div className="post-card" role={post.imagen ? undefined : "img"} aria-label={post.imagen ? undefined : post.alt}>
         {media}
-        <span className="post-badge">Próximamente</span>
       </div>
     )
   }

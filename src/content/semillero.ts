@@ -8,7 +8,8 @@ import queNecesitas609 from "../assets/semillero/ig-que-necesitas-para-hacerla-6
  * embeds ni scripts de Instagram).
  *
  * - `imagen: null` → se muestra una portada armada con la identidad del sitio (placeholder).
- * - `href: null` → la tarjeta no es link y muestra "Próximamente".
+ * - `href: null` → la tarjeta se muestra solo como imagen: sin link, sin badge y con cursor normal (el
+ *   tinte amarillo del hover se mantiene). Con `href` se vuelve link y muestra "Ver en Instagram".
  *
  * TODO: portadas en 1080×1350 y el link de cada posteo (las actuales salen del PDF, en baja).
  * A futuro se podría automatizar con la Instagram Graph API (cuenta profesional + token).

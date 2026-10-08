@@ -19,11 +19,9 @@ export const LINKS = {
   calendario: { href: null, external: true },
   // TODO: URL del fanzine "Basura Cero" (PDF o versión web).
   fanzine: { href: null, external: true },
-  // TODO: confirmar que la cuenta exista con este nombre de usuario.
-  instagram: {
-    href: "https://www.instagram.com/semillero.digital/",
-    external: true,
-  },
+  // TODO: la cuenta @semillero.digital todavía no existe. Al crearla, completar el href
+  // ("https://www.instagram.com/semillero.digital/"): la línea de Instagram del footer vuelve a aparecer sola.
+  instagram: { href: null, external: true },
   // Destino interno: la banda "Más de dos décadas echando raíces" de "Sobre nosotros".
   historia: { href: pageHref("institucional", ANCHORS.historia), external: false },
   // TODO: canal de contacto (página, formulario o mailto:).

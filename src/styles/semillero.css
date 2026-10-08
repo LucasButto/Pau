@@ -45,7 +45,7 @@
   background: var(--color-blanco-ajito); color: var(--color-azul-cianotipia); font-size: 13px; font-weight: 700; letter-spacing: .02em;
   opacity: 0; transform: translateY(4px); transition: opacity .25s, transform .25s;
 }
-.post-card:hover .post-badge, .post-card:focus-visible .post-badge, .post-card.is-pending .post-badge { opacity: 1; transform: none; }
+.post-card:hover .post-badge, .post-card:focus-visible .post-badge { opacity: 1; transform: none; }
 
 /* Portada provisoria: Verde CAR con textura y el título con la identidad del sitio. */
 .post-media > .post-placeholder {
