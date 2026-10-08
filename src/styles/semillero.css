@@ -1,0 +1,110 @@
+/* ───────────────────────── Semillero digital: carrusel de Instagram + guías ───────────────────────── */
+
+.semillero-section { --topo-pos: 20% -300px; padding: var(--section-y) 0; background: var(--color-blanco-ajito); color: var(--color-azul-cianotipia); }
+.semillero-heading { margin-bottom: clamp(24px, 2.4vw, 40px); }
+.semillero-heading h2 { font-size: var(--fs-h2); font-weight: 800; line-height: 1.04; letter-spacing: .005em; }
+.semillero-heading p { margin-top: 6px; font-size: var(--fs-lead); font-weight: 600; }
+
+/* Carril: flechas afuera, 3 tarjetas en escritorio, 2 en tablet, 1 y un pedacito en mobile. */
+.carousel { --gap: 16px; --per-view: 3; position: relative; }
+.carousel-track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  gap: var(--gap); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+  border-radius: 2px;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track:focus-visible { outline-offset: 4px; }
+.carousel-slide { scroll-snap-align: start; min-width: 0; }
+.carousel-arrow {
+  position: absolute; top: 50%; z-index: 2; width: 44px; height: 64px; display: grid; place-items: center; padding: 0;
+  border: 0; border-radius: 10px; background: transparent; color: var(--color-verde-car); transform: translateY(-50%);
+  transition: background-color .2s, opacity .2s;
+}
+.carousel-arrow.is-prev { right: calc(100% + 6px); }
+.carousel-arrow.is-next { left: calc(100% + 6px); }
+.carousel-arrow:hover:not(:disabled) { background: rgb(106 115 50 / .12); }
+.carousel-arrow:disabled { opacity: .3; }
+
+.post-card { position: relative; display: block; overflow: hidden; color: var(--color-blanco-ajito); }
+.post-media { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-verde-car); }
+.post-media > img { width: 100%; height: 100%; object-fit: cover; transition: filter .25s ease, transform .4s ease; }
+/* Hover y foco: la imagen pasa a blanco y negro y se tiñe de Amarillo 6PM (como "¿Qué es el PAU?" del diseño). */
+.post-media::after {
+  content: ""; position: absolute; inset: 0; background: var(--color-amarillo-6pm); mix-blend-mode: multiply;
+  opacity: 0; transition: opacity .25s ease; pointer-events: none;
+}
+.post-card:hover .post-media::after, .post-card:focus-visible .post-media::after { opacity: .92; }
+.post-card:hover .post-media > img, .post-card:focus-visible .post-media > img,
+.post-card:hover .post-placeholder, .post-card:focus-visible .post-placeholder { filter: grayscale(1) contrast(1.05); }
+@media (prefers-reduced-motion: no-preference) {
+  .post-card:hover .post-media > img, .post-card:focus-visible .post-media > img { transform: scale(1.035); }
+}
+.post-card:focus-visible { outline-offset: 4px; }
+.post-badge {
+  position: absolute; right: 12px; bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px;
+  background: var(--color-blanco-ajito); color: var(--color-azul-cianotipia); font-size: 13px; font-weight: 700; letter-spacing: .02em;
+  opacity: 0; transform: translateY(4px); transition: opacity .25s, transform .25s;
+}
+.post-card:hover .post-badge, .post-card:focus-visible .post-badge, .post-card.is-pending .post-badge { opacity: 1; transform: none; }
+
+/* Portada provisoria: Verde CAR con textura y el título con la identidad del sitio. */
+.post-media > .post-placeholder {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 9% 8% 19%;
+  background: var(--color-verde-car); text-align: center; transition: filter .25s ease; --topo-size: 900px auto;
+}
+.post-placeholder img { width: 30%; height: auto; }
+.post-placeholder-title { color: var(--color-blanco-ajito); font-size: clamp(36px, 4vw, 68px); font-weight: 800; line-height: .95; text-align: left; align-self: stretch; }
+.post-placeholder-title em { font-style: normal; color: var(--color-amarillo-6pm); }
+.post-placeholder-foot { color: var(--color-blanco-ajito); font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Guías (se conservan del sitio anterior), debajo del carrusel. */
+.resources { margin-top: clamp(56px, 6vw, 104px); }
+.resources-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 16px 48px; margin-bottom: clamp(20px, 2vw, 32px); }
+.resources-heading h3 { font-size: clamp(26px, 2.2vw, 42px); font-weight: 800; line-height: 1.05; }
+.resources-heading p { max-width: 34em; justify-self: end; color: var(--color-azul-suave); font-size: var(--fs-meta); font-size: clamp(16px, 1.05vw, 19px); line-height: 1.5; }
+.resource-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.resource-card {
+  min-height: 420px; padding: clamp(20px, 1.8vw, 30px); display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--radius-card);
+}
+.resource-amarillo { background: var(--color-amarillo-6pm); color: var(--color-marron-corteza); --topo-pos: 40% 10%; }
+.resource-verde { background: var(--color-verde-car); color: var(--color-blanco-ajito); --focus: var(--color-blanco-ajito); --topo-pos: 70% 60%; }
+.resource-crema { background: var(--color-crema-oscuro); color: var(--color-azul-cianotipia); --topo-pos: 10% 80%; }
+.resource-top { display: flex; justify-content: space-between; gap: 12px; }
+.resource-format, .resource-status { font-size: 13px; font-weight: 700; letter-spacing: var(--track-caps); text-transform: uppercase; }
+.resource-icon {
+  width: 112px; height: 112px; margin: clamp(24px, 2.4vw, 40px) 0; display: grid; place-items: center;
+  border: 1.5px solid currentColor; border-radius: 50%;
+}
+.resource-card h4 { margin-top: auto; font-size: clamp(30px, 2.6vw, 46px); font-weight: 800; line-height: .98; }
+.resource-card p { max-width: 22em; margin-top: 12px; font-size: clamp(15px, 1vw, 18px); line-height: 1.45; }
+.resource-link {
+  width: fit-content; min-height: 44px; margin-top: 14px; display: inline-flex; align-items: center; gap: 9px;
+  border-bottom: 2px solid currentColor; font-size: var(--fs-ui); font-weight: 700;
+}
+
+@media (max-width: 1023px) {
+  .carousel { --per-view: 2; }
+  .resources-heading { grid-template-columns: 1fr; }
+  .resources-heading p { justify-self: start; }
+  .resource-grid { grid-template-columns: 1fr 1fr; }
+  .resource-card:last-child { grid-column: 1 / -1; min-height: 0; }
+}
+@media (max-width: 767px) {
+  /* Flechas debajo del carril; una tarjeta y un pedacito de la siguiente. */
+  .carousel { --per-view: 1.18; --gap: 12px; padding-bottom: 60px; }
+  .carousel-arrow { top: auto; bottom: 0; transform: none; width: 48px; height: 48px; border: 2px solid currentColor; }
+  .carousel-arrow.is-prev { right: auto; left: 0; }
+  .carousel-arrow.is-next { left: 60px; }
+  .resource-grid { grid-template-columns: 1fr; }
+  .resource-card { min-height: 0; }
+  .resource-card:last-child { grid-column: auto; }
+}
+/* En tablet las flechas no tienen lugar afuera del contenedor: van sobre el borde del carril. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .carousel-arrow { width: 44px; height: 44px; border-radius: 50%; background: var(--color-blanco-ajito); box-shadow: 0 2px 10px rgb(19 62 69 / .2); }
+  .carousel-arrow.is-prev { right: auto; left: -14px; }
+  .carousel-arrow.is-next { left: auto; right: -14px; }
+  .carousel-arrow:hover:not(:disabled) { background: var(--color-crema-oscuro); }
+  .carousel-arrow:disabled { opacity: 0; pointer-events: none; }
+}

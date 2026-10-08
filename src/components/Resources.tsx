@@ -1,5 +1,8 @@
 import { LINKS, type LinkKey } from "../config/links"
+import { SEMILLERO } from "../content/inicio"
+import { ANCHORS } from "../content/site"
 import Icon from "./Icon"
+import type { IconName } from "./iconPaths"
 import SiteLink from "./SiteLink"
 
 const NOTIFY_ME = (
@@ -10,113 +13,88 @@ const NOTIFY_ME = (
 
 /** Con destino real, el ícono de enlace externo; sin él, un estado en texto. */
 function ResourceStatus({ link }: { link: LinkKey }) {
-  return LINKS[link].href ? (
-    <Icon name="external" size={20} />
-  ) : (
-    <span className="resource-status">Próximamente</span>
-  )
+  return LINKS[link].href ? <Icon name="external" size={20} /> : <span className="resource-status">Próximamente</span>
 }
 
+interface Resource {
+  link: LinkKey
+  tone: "amarillo" | "verde" | "crema"
+  format: string
+  icon: IconName
+  title: [string, string]
+  text: string
+  action: string
+}
+
+const RESOURCES: Resource[] = [
+  {
+    link: "guiaHuerta",
+    tone: "amarillo",
+    format: "Guía · PDF",
+    icon: "pinHuerta",
+    title: ["La Huerta", "del m²"],
+    text: "Guía de cultivo para balcones y departamentos chicos.",
+    action: "Descargar guía",
+  },
+  {
+    link: "calendario",
+    tone: "verde",
+    format: "Calendario · Web",
+    icon: "calendar",
+    title: ["Estación", "× Estación"],
+    text: "Calendario de cosecha y bolsones agroecológicos.",
+    action: "Ver calendario",
+  },
+  {
+    link: "fanzine",
+    tone: "crema",
+    format: "Fanzine · 12 pág.",
+    icon: "compost",
+    title: ["Basura", "Cero"],
+    text: "Fanzine práctico de compostaje urbano y reducción de residuos.",
+    action: "Leer fanzine",
+  },
+]
+
+const TOPO: Record<Resource["tone"], string> = {
+  amarillo: "topo-amarillo",
+  verde: "topo-oliva-fuerte",
+  crema: "topo-crema-oscuro",
+}
+
+/**
+ * Guías descargables del Semillero digital (se conservan del sitio anterior). Van debajo del
+ * carrusel de Instagram. Los íconos grandes usan el mismo trazo que los pines del mapa.
+ */
 export default function Resources() {
   return (
-    <section
-      className="resources-section"
-      id="recursos"
-      aria-labelledby="recursos-title"
-    >
-      <div className="section-heading resources-heading">
-        <div>
-          <h2 id="recursos-title">Semillero Digital</h2>
-        </div>
-        <p>
-          Ideas, herramientas y saberes para empezar hoy. Leé, guardá, compartí
-          y hacé circular el conocimiento.
-        </p>
-      </div>
-      <div className="resource-grid">
-        <article className="resource-card resource-yellow">
-          <div className="resource-top">
-            <span className="resource-format">GUÍA · PDF</span>
-            <ResourceStatus link="guiaHuerta" />
-          </div>
-          <div
-            className="resource-illustration meter-garden"
-            aria-hidden="true"
-          >
-            <span className="pot pot-one" />
-            <span className="pot pot-two" />
-            <span className="pot pot-three" />
-            <Icon name="sprout" size={84} />
-          </div>
-          <h3>
-            La Huerta
-            <br />
-            del m²
-          </h3>
-          <p>Guía de cultivo para balcones y departamentos chicos.</p>
-          <SiteLink
-            to="guiaHuerta"
-            className="resource-link"
-            pending={NOTIFY_ME}
-          >
-            Descargar guía <Icon name="arrow" size={17} />
-          </SiteLink>
-        </article>
-        <article className="resource-card resource-green">
-          <div className="resource-top">
-            <span className="resource-format">CALENDARIO · WEB</span>
-            <ResourceStatus link="calendario" />
-          </div>
-          <div className="season-wheel" aria-hidden="true">
-            <span>OTOÑO</span>
-            <i />
-            <span>INVIERNO</span>
-            <i />
-            <span>PRIMAVERA</span>
-            <i />
-            <span>VERANO</span>
-          </div>
-          <h3>
-            Estación
-            <br />× Estación
-          </h3>
-          <p>Calendario de cosecha y bolsones agroecológicos.</p>
-          <SiteLink
-            to="calendario"
-            className="resource-link"
-            pending={NOTIFY_ME}
-          >
-            Ver calendario <Icon name="arrow" size={17} />
-          </SiteLink>
-        </article>
-        <article className="resource-card resource-paper">
-          <div className="resource-top">
-            <span className="resource-format">FANZINE · 12 PÁG.</span>
-            <ResourceStatus link="fanzine" />
-          </div>
-          <div className="compost-art" aria-hidden="true">
-            <span className="compost-ring">
-              <Icon name="compost" size={72} />
+    <div className="resources" id={ANCHORS.recursos}>
+      <header className="resources-heading">
+        <h3>{SEMILLERO.recursosTitulo}</h3>
+        <p>{SEMILLERO.recursosBajada}</p>
+      </header>
+      <ul className="resource-grid">
+        {RESOURCES.map((resource) => (
+          <li key={resource.link} className={`resource-card resource-${resource.tone} has-topo ${TOPO[resource.tone]}`}>
+            <div className="resource-top">
+              <span className="resource-format">{resource.format}</span>
+              <ResourceStatus link={resource.link} />
+            </div>
+            <span className="resource-icon" aria-hidden="true">
+              <Icon name={resource.icon} size={64} strokeWidth={1.2} />
             </span>
-            <span>restos</span>
-            <span>tierra</span>
-            <span>vida</span>
-          </div>
-          <h3>
-            Basura
-            <br />
-            Cero
-          </h3>
-          <p>Fanzine práctico de compostaje urbano y reducción de residuos.</p>
-          <SiteLink
-            to="fanzine"
-            className="resource-link"
-            pending={NOTIFY_ME}
-          >
-            Leer fanzine <Icon name="arrow" size={17} />
-          </SiteLink>
-        </article>
-      </div>
-    </section>
+            <h4>
+              {resource.title[0]}
+              <br />
+              {resource.title[1]}
+            </h4>
+            <p>{resource.text}</p>
+            <SiteLink to={resource.link} className="resource-link" pending={NOTIFY_ME}>
+              {resource.action} <Icon name="arrow" size={17} />
+            </SiteLink>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
