@@ -12,7 +12,8 @@
   "dependencies": {
     "maplibre-gl": "^5.24.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "wouter": "3.13.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",

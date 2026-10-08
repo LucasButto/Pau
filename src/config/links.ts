@@ -1,5 +1,7 @@
+import { ANCHORS, pageHref } from "../content/site"
+
 /**
- * Destinos externos del sitio, todos en un solo lugar.
+ * Destinos del sitio que no son secciones propias, todos en un solo lugar.
  *
  * `href: null` significa que todavía no hay un destino real: el link se muestra como
  * "Próximamente" en vez de apuntar a un ancla falsa. No inventar URLs: completar con las reales.
@@ -22,8 +24,8 @@ export const LINKS = {
     href: "https://www.instagram.com/semillero.digital/",
     external: true,
   },
-  // TODO: página "Nuestra historia" del PAU.
-  historia: { href: null, external: true },
+  // Destino interno: la banda "Más de dos décadas echando raíces" de "Sobre nosotros".
+  historia: { href: pageHref("institucional", ANCHORS.historia), external: false },
   // TODO: canal de contacto (página, formulario o mailto:).
   contacto: { href: null, external: true },
   // TODO: política de privacidad.

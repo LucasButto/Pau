@@ -5,104 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--
-      Metadatos de la página. Fuente única: acá se editan título, descripción y redes sociales.
-      La URL pública de los enlaces absolutos la completa vite-plugins/seo.ts (ver .env.example).
+      Metadatos de cada página. Los textos (título, descripción, redes) se editan en src/content/site.ts:
+      vite-plugins/seo.ts completa los {{...}} con los de la página que corresponde a cada ruta y con la
+      URL pública del sitio (ver .env.example).
     -->
-    <title>Huertas, ferias y compost en Rosario | PLANTATE · PAU</title>
-    <meta
-      name="description"
-      content="Encontrá parques huerta, ferias, centros agroecológicos y puntos de compost del Programa de Agricultura Urbana de Rosario. Mapa, horarios y cómo llegar."
-    />
+    <title>{{TITLE}}</title>
+    <meta name="description" content="{{DESCRIPTION}}" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <link rel="canonical" href="{{SITE_URL}}/" />
+    <link rel="canonical" href="{{PAGE_URL}}" />
 
     <!-- Redes sociales: WhatsApp, Facebook, LinkedIn, X -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="PAU Rosario" />
     <meta property="og:locale" content="es_AR" />
-    <meta property="og:url" content="{{SITE_URL}}/" />
-    <meta property="og:title" content="PLANTATE. No seas nabo. · Huertas y ferias de Rosario" />
-    <meta
-      property="og:description"
-      content="Mapa de parques huerta, ferias, centros agroecológicos y compost del Programa de Agricultura Urbana de Rosario."
-    />
+    <meta property="og:url" content="{{PAGE_URL}}" />
+    <meta property="og:title" content="{{OG_TITLE}}" />
+    <meta property="og:description" content="{{OG_DESCRIPTION}}" />
     <meta property="og:image" content="{{SITE_URL}}/og-image.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="PLANTATE. No seas nabo. Mapa de huertas, ferias y compost de Rosario." />
+    <meta property="og:image:alt" content="Programa de Agricultura Urbana de Rosario. PLANTATE. No seas nabo." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="PLANTATE. No seas nabo. · Huertas y ferias de Rosario" />
-    <meta
-      name="twitter:description"
-      content="Mapa de parques huerta, ferias, centros agroecológicos y compost del Programa de Agricultura Urbana de Rosario."
-    />
+    <meta name="twitter:title" content="{{OG_TITLE}}" />
+    <meta name="twitter:description" content="{{OG_DESCRIPTION}}" />
     <meta name="twitter:image" content="{{SITE_URL}}/og-image.png" />
-    <meta name="twitter:image:alt" content="PLANTATE. No seas nabo. Mapa de huertas, ferias y compost de Rosario." />
+    <meta name="twitter:image:alt" content="Programa de Agricultura Urbana de Rosario. PLANTATE. No seas nabo." />
 
     <!-- Identidad: navegador, pantalla de inicio del celular, instalación -->
-    <meta name="theme-color" content="#1F383D" />
+    <meta name="theme-color" content="#6A7332" />
     <meta name="application-name" content="PAU Rosario" />
     <meta name="apple-mobile-web-app-title" content="PAU Rosario" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Conexiones y tipografías -->
+    <!-- Imagen principal de la página (LCP): la precarga la agrega vite-plugins/seo.ts acá. -->
+    <!-- pau:preload -->
+
+    <!-- Conexiones y tipografía de respaldo (Outfit) mientras no estén los archivos de Pacaembu -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="dns-prefetch" href="https://tiles.openfreemap.org" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=DM+Sans:opsz,wght@9..40,400..800&display=swap"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400..800&display=swap" />
 
     <!-- Datos estructurados (schema.org) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebSite",
-            "@id": "{{SITE_URL}}/#website",
-            "url": "{{SITE_URL}}/",
-            "name": "PLANTATE. No seas nabo.",
-            "alternateName": "PAU Rosario",
-            "description": "Mapa interactivo de parques huerta, ferias semanales, centros agroecológicos y puntos de compost del Programa de Agricultura Urbana de Rosario.",
-            "inLanguage": "es-AR"
-          },
-          {
-            "@type": "WebPage",
-            "@id": "{{SITE_URL}}/#webpage",
-            "url": "{{SITE_URL}}/",
-            "name": "Huertas, ferias y compost en Rosario | PLANTATE · PAU",
-            "description": "Encontrá parques huerta, ferias, centros agroecológicos y puntos de compost del Programa de Agricultura Urbana de Rosario. Mapa, horarios y cómo llegar.",
-            "inLanguage": "es-AR",
-            "isPartOf": { "@id": "{{SITE_URL}}/#website" },
-            "about": { "@type": "Thing", "name": "Agricultura urbana en Rosario" },
-            "spatialCoverage": { "@type": "Place", "name": "Rosario, Santa Fe, Argentina" },
-            "primaryImageOfPage": {
-              "@type": "ImageObject",
-              "url": "{{SITE_URL}}/og-image.png",
-              "width": 1200,
-              "height": 630
-            }
-          }
-        ]
-      }
-    </script>
+    <script type="application/ld+json">{{JSON_LD}}</script>
   </head>
   <body>
     <noscript>
-      <h1>PLANTATE. No seas nabo.</h1>
-      <p>
-        Mapa interactivo de parques huerta, ferias semanales, centros agroecológicos y puntos de compost del Programa de
-        Agricultura Urbana de Rosario.
-      </p>
-      <p>Para ver el mapa y el directorio completos, activá JavaScript en tu navegador.</p>
+      <h1>{{NOSCRIPT_TITLE}}</h1>
+      <p>{{DESCRIPTION}}</p>
+      <p>Para ver el sitio completo (mapa, buscador y novedades), activá JavaScript en tu navegador.</p>
     </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
