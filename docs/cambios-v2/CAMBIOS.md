@@ -2,6 +2,16 @@
 
 > **Para Claude Code.** Este documento es la especificación completa de la segunda ronda de cambios del sitio del Programa de Agricultura Urbana (PAU) de Rosario. Leelo entero antes de tocar código. Cuando llegues a cada sección, **abrí con la herramienta Read las imágenes que menciona** (están en `docs/cambios-v2/img/`): son la referencia visual obligatoria. Trabajá de forma autónoma; solo frená si algo de la sección "Decisiones abiertas" bloquea por completo una tarea (en ese caso usá el valor por defecto que se indica y seguí).
 
+## Actualización (correcciones de la clienta)
+
+> **Esta nota manda sobre el resto del documento.** Donde algo de abajo la contradiga (por ejemplo la sección 5.1, la ficha de la 5.2, la plaquita de la 5.3 y el carrusel de la 5.4), vale lo que dice acá. El código ya está actualizado.
+
+1. **Hero:** el `<h1>` vuelve a ser **"RAÍCES VECINAS"**, como en el PDF (`img/01`): "RAÍCES" en Verde CAR en la primera línea y "VECINAS" en Blanco Ajito dentro del bloque Verde CAR en la segunda. Escala del PDF: `clamp(56px, 5.7vw, 110px)`. **"PLANTATE. No seas nabo."** pasa a ser el antetítulo chico, arriba del h1 (estilo `.hero-kicker`). Motivo: "Raíces Vecinas" es la línea narrativa y "PLANTATE. No seas nabo." es el eslogan. *(Reemplaza lo que dicen las secciones 1, 1.1, 5.1, 12 y la tabla 3.3 sobre el titular.)*
+2. **Ficha del lugar:** se sacan **Huerteros** y **Días de apertura**. Quedan foto, categoría, "Abierto hoy", nombre, dirección, distancia, horario y "Cómo llegar". El campo `people` ya no existe en los datos; `openDays` se queda porque lo usa "Abierto hoy". Con menos contenido la foto ocupa el alto que sobra (más vertical, como `img/02b`) y la ficha entra sin scroll interno. El mapa vuelve al alto del PDF, `clamp(480px, 38vw, 640px)` (el mínimo es 480 y no 420 para que en tablet la ficha tampoco scrollee). *(Reemplaza lo que dicen las secciones 1.1, 5.2, 11 y 13 sobre huerteros y días de apertura.)*
+3. **Plaquitas que rotan:** se saca el botón play/pausa (el resto queda como está, incluido el texto en Azul Cianotipia). Se quedan los puntitos: al hacer click en uno, la rotación se detiene definitivamente. Se mantiene la pausa con hover, con foco, fuera de pantalla y con la pestaña oculta, y con `prefers-reduced-motion` no arranca sola. *(Reemplaza lo que dice la sección 5.3 sobre el botón de pausa.)*
+4. **Semillero digital:** como la cuenta de Instagram y los posteos todavía no existen, una tarjeta con `href: null` se muestra **solo como imagen**: sin badge "Próximamente", sin link y con cursor normal (el tinte amarillo del hover se queda). Con `href` se vuelve link y muestra "Ver en Instagram". En el footer, `LINKS.instagram.href` es `null` y la línea de Instagram **no se muestra** hasta que se complete el href. *(Reemplaza lo que dicen las secciones 5.4 y 5.5 sobre los "Próximamente" y la línea de Instagram.)*
+5. **No se toca** el bloque "Guías para empezar hoy" (`Resources.tsx`), incluidos sus "Próximamente": está pendiente de que lo confirme la profesora.
+
 ---
 
 ## 0. Reglas de juego
