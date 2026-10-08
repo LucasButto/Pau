@@ -1,0 +1,106 @@
+/* ───────────────────────── Sobre nosotros ───────────────────────── */
+
+/* Hero: foto a sangre con un degradado Verde CAR desde la izquierda para que el texto crema se lea. */
+.about-hero {
+  --focus: var(--color-amarillo-6pm);
+  position: relative; isolation: isolate; min-height: max(520px, min(90svh, 940px)); display: flex; align-items: center;
+  padding: clamp(48px, 6vw, 96px) 0; color: var(--color-blanco-ajito); background: var(--color-verde-oscuro);
+}
+.about-hero > picture, .about-hero > picture img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.about-hero > picture { z-index: -2; }
+.about-hero > picture img { object-fit: cover; object-position: 30% 50%; }
+.about-hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg, rgb(52 58 22 / .82) 0%, rgb(74 81 35 / .62) 48%, rgb(74 81 35 / .12) 100%);
+}
+.about-hero-content { position: relative; }
+.about-title { display: flex; flex-direction: column; line-height: .92; }
+.about-title-pre { font-size: clamp(36px, 3.7vw, 72px); font-weight: 400; line-height: 1; }
+.about-title-main { font-size: var(--fs-h1-about); font-weight: 800; letter-spacing: var(--track-title); text-transform: uppercase; }
+/* "URBANA" en su propia línea, con la hoja del isotipo al final (como en el logo). */
+.about-title-last { display: flex; width: fit-content; align-items: flex-end; gap: .12em; }
+.about-title-last img { width: auto; height: .82em; margin-bottom: .06em; }
+.about-lead { max-width: 32em; margin-top: clamp(14px, 1.4vw, 22px); font-size: var(--fs-lead); font-weight: 600; line-height: 1.45; }
+.about-hero .btn { margin-top: clamp(28px, 3vw, 48px); }
+
+/* Banda "Más de dos décadas echando raíces." (img/14), destino de #historia. */
+.decades { display: flex; align-items: center; gap: clamp(16px, 2vw, 28px); }
+.decades > svg { flex: none; width: clamp(30px, 2.4vw, 44px); height: auto; }
+.decades h2 { font-size: clamp(20px, 1.7vw, 32px); font-weight: 700; line-height: 1.15; }
+.decades p { max-width: 46em; margin-top: 4px; font-size: clamp(16px, 1.1vw, 20px); line-height: 1.45; }
+
+/* Quiénes somos / Nuestras propuestas */
+.about-section { padding: clamp(72px, 9vw, 176px) 0; color: var(--color-azul-cianotipia); }
+.about-who { background: var(--color-blanco-ajito); --topo-pos: 55% 30%; }
+.about-history { background: var(--color-blanco-ajito); --topo-pos: 10% 10%; }
+.about-proposals { background: var(--color-amarillo-6pm); --focus: var(--color-azul-cianotipia); --topo-pos: -120px 40%; }
+.about-heading { font-size: var(--fs-h2-inst); font-weight: 800; line-height: .98; letter-spacing: var(--track-title); text-transform: uppercase; }
+.about-text { max-width: 70ch; margin-top: clamp(28px, 3vw, 52px); }
+.about-text p, .about-history p { font-size: var(--fs-body); font-weight: 500; line-height: 1.45; }
+.about-text p + p { margin-top: 1.2em; }
+.about-history p { max-width: 70ch; margin-top: 1.2em; }
+.about-list { max-width: 70ch; margin-top: clamp(24px, 2.6vw, 44px); display: flex; flex-direction: column; gap: .7em; }
+.about-list li { position: relative; padding-left: 1em; font-size: var(--fs-body); font-weight: 500; line-height: 1.45; }
+.about-list li::before { content: "•"; position: absolute; left: 0; color: currentColor; }
+
+/* Objetivos: texto a la izquierda y foto pegada al borde derecho de la pantalla (img/09). */
+.about-goals {
+  --focus: var(--color-blanco-ajito);
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center;
+  min-height: clamp(520px, 51vw, 984px); padding: clamp(40px, 3vw, 60px) 0; background: var(--color-verde-car); color: var(--color-blanco-ajito);
+}
+.about-goals-layout { grid-area: 1 / 1; }
+.about-goals-copy { width: min(42%, 600px); }
+.about-goals .about-list li { font-size: clamp(17px, 1.25vw, 24px); }
+.about-goals-photo {
+  grid-area: 1 / 1; justify-self: end; align-self: stretch; width: 50%; overflow: hidden;
+  border-radius: clamp(40px, 4.2vw, 84px) 0 0 clamp(40px, 4.2vw, 84px);
+}
+.about-goals-photo picture, .about-goals-photo img { width: 100%; height: 100%; }
+.about-goals-photo img { object-fit: cover; }
+
+/* CTA "Hay una huerta. Hay un lugar para vos." (img/13). Azul Cianotipia: es el tono oscuro de la
+   paleta más cercano al verde muy oscuro de la referencia, y el crema sobre él da 10,8:1. */
+.cta-huerta { --focus: var(--color-amarillo-6pm); padding: clamp(64px, 7vw, 128px) 0; background: var(--color-azul-cianotipia); color: var(--color-blanco-ajito); text-align: center; }
+.cta-huerta h2 { font-size: var(--fs-h2); font-weight: 800; line-height: 1.02; }
+.cta-huerta p { max-width: 36em; margin: 18px auto 0; font-size: var(--fs-lead); line-height: 1.45; }
+.cta-huerta .btn { margin-top: clamp(24px, 2.4vw, 36px); color: var(--color-azul-cianotipia); }
+.cta-huerta .btn:hover { color: var(--color-azul-cianotipia); background: #FFFFF4; }
+
+/* Auspiciantes: círculo, palito, círculo, palito (img/10). */
+.sponsors { padding: clamp(36px, 3vw, 56px) 0; background: var(--color-blanco-ajito); }
+.sponsor-list { display: flex; align-items: center; }
+.sponsor { display: flex; align-items: center; }
+/* Cada logo (salvo el primero) ocupa el espacio a su izquierda, con la línea vertical en el medio. */
+.sponsor + .sponsor { flex: 1; }
+.sponsor + .sponsor::before {
+  content: ""; flex: 1; align-self: stretch;
+  background: linear-gradient(var(--color-azul-cianotipia), var(--color-azul-cianotipia)) center / 1px 66% no-repeat;
+}
+.sponsor-circle {
+  position: relative; width: clamp(96px, 8vw, 154px); aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
+  border: 1px solid var(--color-azul-cianotipia); border-radius: 50%; color: var(--color-azul-suave); font-size: 14px; font-weight: 600;
+}
+.sponsor-mono {
+  width: 66%; height: 66%; background: var(--color-azul-cianotipia);
+  -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; transition: opacity .2s;
+}
+.sponsor-circle img { position: absolute; inset: 17%; width: 66%; height: 66%; object-fit: contain; opacity: 0; transition: opacity .2s; }
+.sponsor a:hover .sponsor-mono, .sponsor a:focus-visible .sponsor-mono { opacity: 0; }
+.sponsor a:hover img, .sponsor a:focus-visible img { opacity: 1; }
+.sponsor a { border-radius: 50%; }
+
+@media (max-width: 1023px) {
+  .about-goals { grid-template-columns: 1fr; min-height: 0; padding: var(--section-y) 0 0; }
+  .about-goals-copy { width: auto; }
+  .about-goals-photo { grid-area: auto; justify-self: end; width: calc(100% - var(--pad-x)); aspect-ratio: 3 / 2; margin-top: 40px; }
+}
+@media (max-width: 767px) {
+  .about-hero { min-height: max(520px, 80svh); }
+  .about-hero::before { background: linear-gradient(180deg, rgb(52 58 22 / .55) 0%, rgb(52 58 22 / .78) 60%, rgb(52 58 22 / .86) 100%); }
+  .about-title-last img { height: .72em; }
+  /* Mobile: grilla de 2 columnas sin las líneas verticales. */
+  .sponsor-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; justify-items: center; }
+  .sponsor + .sponsor::before { display: none; }
+  .sponsor-circle { width: min(38vw, 140px); }
+}
