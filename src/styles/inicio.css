@@ -1,0 +1,110 @@
+/* ───────────────────────── Raíces Vecinas: hero, frases superiores y banda verde ───────────────────────── */
+
+.hero { background: var(--color-blanco-ajito); --topo-pos: -180px -120px; }
+
+/* Frases superiores (img/15): fila fina con una línea debajo, arriba del hero. */
+.top-phrases {
+  display: flex; justify-content: space-between; gap: 8px 24px; padding: 16px 0 10px; border-bottom: 1px solid rgb(19 62 69 / .32);
+  color: var(--color-azul-cianotipia); font-size: 13px; font-weight: 700; line-height: 1.3; letter-spacing: var(--track-caps); text-transform: uppercase;
+}
+
+.hero-layout {
+  min-height: clamp(500px, calc(100svh - var(--header-h) - var(--band-h) - 48px), 860px);
+  padding: clamp(32px, 4vw, 64px) 0 clamp(40px, 4.5vw, 80px);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: clamp(24px, 4vw, 80px);
+}
+.hero-copy { min-width: 0; color: var(--color-verde-car); }
+.hero-kicker {
+  display: flex; align-items: center; gap: 14px; margin-bottom: clamp(14px, 1.6vw, 26px);
+  color: var(--color-verde-car); font-size: var(--fs-kicker); font-weight: 800; line-height: 1.1; letter-spacing: .12em; text-transform: uppercase;
+}
+.hero-kicker::before { content: ""; width: 1.9em; height: 3px; border-radius: 2px; background: currentColor; }
+
+/* Titular con el tratamiento de "RAÍCES / VECINAS" del PDF: la primera línea dentro de un bloque Verde CAR. */
+.hero-title {
+  color: var(--color-verde-car); font-size: var(--fs-h1); font-weight: 800; line-height: .94;
+  letter-spacing: var(--track-title); text-transform: uppercase;
+}
+.hero-title-block {
+  display: inline-block; margin: 0 0 .1em -.26em; padding: .1em .26em .05em;
+  background: var(--color-verde-car); color: var(--color-blanco-ajito);
+}
+.hero-title-rest { display: block; }
+.hero-lead { max-width: 30em; margin-top: clamp(20px, 2vw, 32px); font-size: var(--fs-lead); line-height: 1.45; }
+.hero-lead strong { font-weight: 700; }
+.hero-copy .btn { margin-top: clamp(22px, 2vw, 32px); }
+
+.hero-collage { display: block; justify-self: end; width: min(100%, 680px); }
+.hero-collage img { width: 100%; height: auto; }
+
+/* Banda Verde CAR con textura: transición del hero a la sección siguiente. */
+.banda-verde { min-height: var(--band-h); background: var(--color-verde-car); --topo-pos: 30% 40%; --topo-size: max(1000px, 80vw) auto; }
+.banda-verde.has-content { --focus: var(--color-blanco-ajito); display: flex; align-items: center; padding: clamp(28px, 3vw, 44px) 0; color: var(--color-blanco-ajito); }
+
+@media (max-width: 1023px) {
+  .hero-layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  .hero-layout { min-height: 0; grid-template-columns: 1fr; gap: 28px; padding-top: 28px; }
+  .hero-collage { justify-self: center; width: min(100%, 520px); }
+  .top-phrases { justify-content: center; text-align: center; flex-wrap: wrap; }
+}
+@media (max-width: 520px) {
+  /* Si no entran las dos frases, queda solo la primera. */
+  .top-phrases p + p { display: none; }
+  .hero-title-block { margin-left: -.18em; padding-inline: .18em; }
+}
+
+/* ───────────────────────── Sembramos futuro (plaquita que rota) ───────────────────────── */
+
+.impact-section {
+  /* Texto sobre amarillo: Azul Cianotipia por contraste (5,5:1). El PDF usa crema (1,97:1, no pasa AA). */
+  --impact-ink: var(--color-azul-cianotipia);
+  --topo-pos: 60% 20%;
+  padding: clamp(48px, 5vw, 72px) 0; background: var(--color-amarillo-6pm); color: var(--impact-ink);
+}
+.impact-layout { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: clamp(32px, 6vw, 120px); }
+.impact-intro h2 { font-size: var(--fs-h2); font-weight: 800; line-height: 1.04; letter-spacing: .005em; }
+.impact-intro p { max-width: 28em; margin-top: 14px; font-size: var(--fs-lead); line-height: 1.45; }
+
+.impact-rotator { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.plaque {
+  --plaque-size: clamp(220px, 16.5vw, 320px);
+  position: relative; width: var(--plaque-size); height: var(--plaque-size); display: grid;
+  border-radius: var(--radius-plaque); background: rgb(248 248 225 / .4);
+}
+.plaque-slide {
+  grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10% 12%;
+  text-align: center; opacity: 0; transform: translateY(10px); transition: opacity .35s ease, transform .35s ease; pointer-events: none;
+}
+.plaque-slide.is-active { opacity: 1; transform: none; }
+.plaque-prefix { font-size: calc(var(--plaque-size) * .055); font-weight: 800; letter-spacing: var(--track-caps); text-transform: uppercase; }
+.plaque-number {
+  font-size: calc(var(--plaque-size) * .4); font-weight: 800; line-height: .9; letter-spacing: .01em;
+  padding-bottom: calc(var(--plaque-size) * .04); border-bottom: 4px solid currentColor; min-width: 66%;
+}
+.plaque-label {
+  margin-top: calc(var(--plaque-size) * .05); font-size: max(13px, calc(var(--plaque-size) * .062)); font-weight: 800; line-height: 1.12;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.plaque-controls { display: flex; align-items: center; gap: 6px; }
+.plaque-dots { display: flex; }
+.plaque-dots button {
+  width: 32px; height: 44px; padding: 0; border: 0; background: transparent; display: grid; place-items: center;
+}
+.plaque-dots button::before {
+  content: ""; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--impact-ink); transition: background-color .2s, transform .2s;
+}
+.plaque-dots button[aria-current="true"]::before { background: var(--impact-ink); transform: scale(1.1); }
+.plaque-dots button:hover::before { background: rgb(19 62 69 / .4); }
+.plaque-toggle {
+  width: 44px; height: 44px; display: grid; place-items: center; border: 2px solid var(--impact-ink); border-radius: 50%;
+  background: transparent; color: var(--impact-ink);
+}
+.plaque-toggle:hover { background: rgb(19 62 69 / .1); }
+
+@media (max-width: 767px) {
+  .impact-layout { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .impact-intro p { margin-inline: auto; }
+  .plaque { --plaque-size: clamp(200px, 60vw, 250px); }
+}
