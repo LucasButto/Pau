@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react"
 import { DATOS_IMPACTO, ROTACION_MS } from "../content/impacto"
 import { IMPACTO } from "../content/inicio"
 import { REDUCED_MOTION_QUERY, useMediaQuery } from "../hooks/useMediaQuery"
-import Icon from "./Icon"
 
 /** La pestaña está visible (si no, la plaquita no rota). */
 function usePageVisible(): boolean {
@@ -20,7 +19,8 @@ function usePageVisible(): boolean {
  * vez y va rotando. Hecha en HTML/CSS (sin GIF ni imágenes).
  *
  * - Rota cada ~3,5 s; se pausa con hover, con foco, fuera de pantalla y con la pestaña oculta.
- * - Puntitos para elegir el dato y botón pausa/reproducir (WCAG 2.2.2).
+ * - Puntitos para elegir el dato. Al hacer click en uno, la rotación se detiene para siempre: la
+ *   persona tomó el control (así se cubre la pausa de WCAG 2.2.2 sin un botón aparte).
  * - Con `prefers-reduced-motion` no arranca sola.
  * - La plaquita es decorativa para lectores de pantalla: la lista oculta tiene los 4 datos completos.
  */
@@ -28,15 +28,14 @@ export default function ImpactStats() {
   const reducedMotion = useMediaQuery(REDUCED_MOTION_QUERY)
   const pageVisible = usePageVisible()
   const [index, setIndex] = useState(0)
-  /** Elección de la persona con el botón; `null` = según la preferencia de movimiento. */
-  const [userPlaying, setUserPlaying] = useState<boolean | null>(null)
+  /** La persona eligió un dato con los puntitos: la rotación queda detenida. */
+  const [stopped, setStopped] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
   const [inView, setInView] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
 
-  const playing = userPlaying ?? !reducedMotion
-  const running = playing && !hovered && !focused && inView && pageVisible
+  const running = !stopped && !reducedMotion && !hovered && !focused && inView && pageVisible
 
   useEffect(() => {
     const element = rootRef.current
@@ -101,19 +100,14 @@ export default function ImpactStats() {
                     type="button"
                     aria-label={`Ver dato ${position + 1} de ${DATOS_IMPACTO.length}`}
                     aria-current={position === index ? "true" : undefined}
-                    onClick={() => setIndex(position)}
+                    onClick={() => {
+                      setIndex(position)
+                      setStopped(true)
+                    }}
                   />
                 </li>
               ))}
             </ul>
-            <button
-              type="button"
-              className="plaque-toggle"
-              aria-label={playing ? "Pausar la rotación de los datos" : "Reproducir la rotación de los datos"}
-              onClick={() => setUserPlaying(!playing)}
-            >
-              <Icon name={playing ? "pause" : "play"} size={18} />
-            </button>
           </div>
         </div>
       </div>

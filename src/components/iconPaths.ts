@@ -85,8 +85,6 @@ export const ICON_PATHS = {
   ],
   menu: [["path", { d: "M3 6h14M3 10h14M3 14h14" }]],
   minus: [["path", { d: "M4.5 10h11" }]],
-  pause: [["path", { d: "M7.5 5v10M12.5 5v10" }]],
-  play: [["path", { d: "M7 4.8v10.4L15 10 7 4.8Z" }]],
   plus: [["path", { d: "M10 4.5v11M4.5 10h11" }]],
   refresh: [
     ["path", { d: "M16 10a6 6 0 1 1-1.8-4.3" }],
