@@ -6,7 +6,7 @@ import type { DayCode } from "../lib/schedule"
 /*
  * ╔══════════════════════════════════════════════════════════════════════════════════════════╗
  * ║ TODO: reemplazar por la lista oficial del PAU (nombre, categoría, dirección, horario,       ║
- * ║ huerteros, días de apertura y foto). Los puntos de abajo son DATOS DE EJEMPLO.              ║
+ * ║ días de apertura y foto). Los puntos de abajo son DATOS DE EJEMPLO.                         ║
  * ║ Según los números del sitio hay 7 parques huerta, 9 espacios huerta y 1 CAR: la estructura  ║
  * ║ ya está lista para recibirlos (un objeto por punto en `LOCATIONS`). "Huertas" está vacía    ║
  * ║ hasta que llegue la lista real: no inventar puntos.                                         ║
@@ -106,7 +106,6 @@ export interface Location {
   district: string
   schedule: string
   address: string
-  people: string
   openDays: DayCode[]
   lat: number
   lng: number
@@ -127,7 +126,6 @@ export const LOCATIONS: Location[] = [
     district: "Distrito Sur · Barrio Molino Blanco",
     schedule: "Mar a sáb · 8:00 a 13:00",
     address: "Ayacucho 4800, Rosario",
-    people: "Marta, Luis y 18 familias huerteras",
     openDays: ["MAR", "MIÉ", "JUE", "VIE", "SÁB"],
     // Centro del área "Parque Huerta Molino Blanco" en OSM, sobre Ayacucho. OSM ubica el predio
     // en el barrio Pte. Roque Sáenz Peña (zona Molino Blanco), Distrito Sur.
@@ -146,7 +144,6 @@ export const LOCATIONS: Location[] = [
     district: "Distrito Norte · Alberdi",
     schedule: "Sábados · 9:00 a 13:00",
     address: "Bv. Rondeau y Puccio, Rosario",
-    people: "Productores de la red norte",
     openDays: ["SÁB"],
     // Plaza Alberdi (OSM), junto a la esquina de Bv. Rondeau y Puccio. Barrio Alberdi, Distrito Norte.
     lat: -32.895002,
@@ -160,7 +157,6 @@ export const LOCATIONS: Location[] = [
     district: "Distrito Oeste · Godoy",
     schedule: "Lun a vie · 8:30 a 16:00",
     address: "Pte. Perón 8000, Rosario",
-    people: "Semillas, talleres y producción",
     openDays: ["LUN", "MAR", "MIÉ", "JUE", "VIE"],
     // TODO: verificar coordenada. Es la altura 8000 de Av. Pte. Perón, interpolada a partir de las
     // direcciones 7800 y 7900 cargadas en OSM (barrio Godoy, Distrito Oeste), pero en OSM no hay
@@ -181,7 +177,6 @@ export const LOCATIONS: Location[] = [
     district: "Distrito Sur · Tablada",
     schedule: "Lun a vie · 8:00 a 12:30",
     address: "Gutiérrez y Cepeda, Rosario",
-    people: "Cooperativa La Tablada",
     openDays: ["LUN", "MAR", "MIÉ", "JUE", "VIE"],
     // Centro del área "Parque Huerta La Tablada" en OSM (barrio Esteban Echeverría, Distrito Sur).
     // Ojo: la esquina Gutiérrez y Cepeda no existe como cruce en OSM; el predio queda ~450 m al
@@ -197,7 +192,6 @@ export const LOCATIONS: Location[] = [
     district: "Distrito Noroeste · Ludueña",
     schedule: "Mié y vie · 16:00 a 19:00",
     address: "Vélez Sarsfield 6100, Rosario",
-    people: "Red de compostaje barrial",
     openDays: ["MIÉ", "VIE"],
     // TODO: verificar coordenada. La dirección existe en OSM (Vélez Sarsfield 6100, Distrito
     // Noroeste), pero cae en el barrio Empalme Graneros, a ~1,6 km del centro de Ludueña.

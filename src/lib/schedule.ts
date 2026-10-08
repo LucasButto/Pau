@@ -11,16 +11,6 @@ const WEEK: readonly DayCode[] = [
   "SÁB",
 ]
 
-/** Días que muestra la ficha (ningún punto abre los domingos). */
-export const DISPLAY_DAYS: readonly DayCode[] = [
-  "LUN",
-  "MAR",
-  "MIÉ",
-  "JUE",
-  "VIE",
-  "SÁB",
-]
-
 export const DAY_NAMES: Record<DayCode, string> = {
   LUN: "lunes",
   MAR: "martes",

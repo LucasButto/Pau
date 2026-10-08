@@ -1,7 +1,7 @@
 import { CATEGORIES } from "../data/locations"
 import type { DirectoryEntry } from "../hooks/useDirectory"
 import { directionsUrl, formatDistance } from "../lib/geo"
-import { DAY_NAMES, DISPLAY_DAYS, openStatus } from "../lib/schedule"
+import { DAY_NAMES, openStatus } from "../lib/schedule"
 import Icon from "./Icon"
 import SafeImage from "./SafeImage"
 
@@ -45,7 +45,6 @@ export default function PlaceDetail({ entry, distanceFrom, searching, onClear }:
   const meta = CATEGORIES[location.type]
   const status = openStatus(location.openDays)
   const titleId = `lugar-${location.id}-titulo`
-  const daysId = `${titleId}-dias`
 
   return (
     <section id="ficha-lugar" className="place-panel" aria-labelledby={titleId}>
@@ -105,31 +104,6 @@ export default function PlaceDetail({ entry, distanceFrom, searching, onClear }:
                 <Icon name="clock" size={17} />
                 <span>{location.schedule}</span>
               </p>
-            </div>
-            <p className="growers">
-              <small>Huerteros</small>
-              {location.people}
-            </p>
-            <div className="open-days">
-              <small id={daysId}>Días de apertura</small>
-              <ul aria-labelledby={daysId}>
-                {DISPLAY_DAYS.map((day) => {
-                  const open = location.openDays.includes(day)
-                  const isToday = day === status.today
-                  return (
-                    <li
-                      className={[open ? "is-open" : "", isToday ? "is-today" : ""].join(" ").trim() || undefined}
-                      key={day}
-                    >
-                      <span aria-hidden="true">{day}</span>
-                      <span className="sr-only">
-                        {DAY_NAMES[day]}: {open ? "abierto" : "cerrado"}
-                        {isToday ? " (hoy)" : ""}
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
             </div>
           </div>
         </div>
