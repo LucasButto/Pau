@@ -1,0 +1,10 @@
+{
+  "description": "Connects young urban residents in Rosario with local urban farms, markets, and eco-resources via an interactive map and community guides.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
