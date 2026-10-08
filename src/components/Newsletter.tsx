@@ -1,4 +1,5 @@
 import { useId, useRef, useState, type FormEvent } from "react"
+import { FOOTER_TEXT } from "../content/navegacion"
 import {
   NewsletterError,
   isValidEmail,
@@ -49,14 +50,14 @@ export default function Newsletter() {
 
   return (
     <div className="newsletter" id="newsletter">
-      <h3>
-        Que la próxima
+      <h2>
+        {FOOTER_TEXT.newsletterTitle[0]}
         <br />
-        temporada te encuentre.
-      </h3>
+        {FOOTER_TEXT.newsletterTitle[1]}
+      </h2>
       {status === "success" ? (
         <div className="success-message" role="status">
-          <Icon name="sprout" size={22} />
+          <Icon name="pinParque" size={24} strokeWidth={1.5} />
           <p>
             <strong>Ya estás adentro.</strong> Pronto vas a recibir novedades.
           </p>
