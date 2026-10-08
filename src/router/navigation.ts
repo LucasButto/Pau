@@ -13,7 +13,8 @@ export function moveFocus(element: HTMLElement | null) {
 export function scrollToAnchor(id: string, { smooth = true, focus = true } = {}): boolean {
   const element = document.getElementById(id)
   if (!element) return false
-  element.scrollIntoView({ behavior: smooth && !prefersReducedMotion() ? "smooth" : "auto", block: "start" })
+  // "instant" (y no "auto"): "auto" respeta el `scroll-behavior: smooth` del CSS.
+  element.scrollIntoView({ behavior: smooth && !prefersReducedMotion() ? "smooth" : "instant", block: "start" })
   if (focus) moveFocus(element)
   return true
 }

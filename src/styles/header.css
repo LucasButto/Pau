@@ -100,7 +100,7 @@
   .menu-button { display: grid; }
 }
 /* Teléfonos muy angostos: el botón queda solo con ícono (su nombre accesible sigue siendo "Ver mapa"). */
-@media (max-width: 379px) {
+@media (max-width: 359px) {
   .brand-link img { height: 38px; }
   .header-cta { width: 44px; padding: 0; justify-content: center; }
   .header-cta-short { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

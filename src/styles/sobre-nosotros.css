@@ -24,7 +24,7 @@
 .about-hero .btn { margin-top: clamp(28px, 3vw, 48px); }
 
 /* Banda "Más de dos décadas echando raíces." (img/14), destino de #historia. */
-.decades { display: flex; align-items: center; gap: clamp(16px, 2vw, 28px); }
+.decades { display: flex; align-items: flex-start; gap: clamp(16px, 2vw, 28px); }
 .decades > svg { flex: none; width: clamp(30px, 2.4vw, 44px); height: auto; }
 .decades h2 { font-size: clamp(20px, 1.7vw, 32px); font-weight: 700; line-height: 1.15; }
 .decades p { max-width: 46em; margin-top: 4px; font-size: clamp(16px, 1.1vw, 20px); line-height: 1.45; }

@@ -55,7 +55,7 @@
 .footer-bottom > :nth-child(2) { color: var(--color-blanco-ajito); text-align: center; }
 .footer-legal { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px 10px; }
 
-@media (max-width: 1023px) {
+@media (max-width: 1199px) {
   .footer-main { grid-template-columns: 1fr 1fr; }
   .newsletter { grid-column: 1 / -1; max-width: 520px; }
 }

@@ -126,7 +126,12 @@
 .map-canvas .map-gl { position: absolute; inset: 0; } /* gana sobre .maplibregl-map, que se carga después */
 .map-gl:focus-visible, .map-gl canvas:focus-visible { outline: 3px solid var(--color-azul-cianotipia); outline-offset: -3px; }
 
-.map-controls { position: absolute; z-index: 6; left: 14px; bottom: 14px; display: flex; align-items: flex-end; gap: 8px; }
+/* Controles arriba a la derecha (abajo queda la atribución, obligatoria): zoom + "Ver todo" y "Mi ubicación". */
+.map-controls {
+  position: absolute; z-index: 6; top: 14px; right: 14px;
+  display: grid; grid-template-columns: auto auto; align-items: start; justify-items: end; gap: 6px;
+}
+.map-zoom { grid-column: 1; grid-row: 1 / span 2; }
 .map-zoom { display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgb(19 62 69 / .18); }
 .map-controls button {
   min-width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 14px;
@@ -216,8 +221,8 @@
   .place-scroll { overflow: visible; background: none; }
   .place-media { aspect-ratio: 16 / 9; }
   .directions-button { margin-top: 0; }
-  .map-controls { left: auto; right: 10px; top: 64px; bottom: auto; display: grid; grid-template-columns: auto auto; align-items: start; justify-items: end; gap: 6px; }
-  .map-zoom { grid-column: 1; grid-row: 1 / span 2; }
+  /* Debajo del aviso "Ver ficha de…". */
+  .map-controls { right: 10px; top: 64px; }
   .map-banner, .map-notice { left: 10px; right: 10px; top: 64px; max-width: none; }
   .map-canvas:has(.map-controls) .map-notice { right: 112px; }
 }
