@@ -1,13 +1,13 @@
 {
   "name": "PAU Rosario · Programa de Agricultura Urbana",
   "short_name": "PAU Rosario",
-  "description": "Mapa de parques huerta, ferias, centros agroecológicos y puntos de compost del Programa de Agricultura Urbana de Rosario.",
+  "description": "Mapa de parques huerta, huertas, ferias, el Centro Agroecológico (CAR) y puntos de compost del Programa de Agricultura Urbana de Rosario.",
   "lang": "es-AR",
   "start_url": "/",
   "scope": "/",
   "display": "browser",
-  "background_color": "#F7F6F0",
-  "theme_color": "#1F383D",
+  "background_color": "#F8F8E1",
+  "theme_color": "#6A7332",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }

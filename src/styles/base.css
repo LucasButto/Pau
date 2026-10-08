@@ -1,0 +1,130 @@
+/* ───────────────────────── Base: medidas, tipografía, utilidades y botones ───────────────────────── */
+
+:root {
+  --header-h: 80px;
+  --container: 1360px;
+  --pad-x: clamp(20px, 5vw, 80px);
+  --section-y: clamp(56px, 6.25vw, 120px);
+  --band-h: clamp(56px, 6.5vw, 125px);
+
+  --radius-card: 18px;
+  --radius-btn: 12px;
+  --radius-chip: 11px;
+  --radius-plaque: 24px;
+
+  /* Escala tipográfica (docs/cambios-v2/CAMBIOS.md §3.3): el valor a 1920 px es el máximo. */
+  --fs-h1: clamp(48px, 5.2vw, 104px);
+  --fs-kicker: clamp(14px, 1.15vw, 22px);
+  --fs-h1-about: clamp(48px, 5vw, 95px);
+  --fs-h2: clamp(34px, 3.125vw, 60px);
+  --fs-h2-inst: clamp(40px, 4.7vw, 90px);
+  --fs-body: clamp(17px, 1.3vw, 25px);
+  --fs-lead: clamp(16px, 1.15vw, 22px);
+  --fs-place: clamp(20px, 1.6vw, 30px);
+  --fs-ui: clamp(15px, 1vw, 19px);
+  --fs-meta: clamp(13px, .85vw, 16px);
+
+  --track-caps: .08em;   /* textos chicos en mayúsculas */
+  --track-title: .015em; /* títulos en mayúsculas */
+
+  /* Foco: Azul Cianotipia sobre fondos claros; cada sección oscura lo redefine. */
+  --focus: var(--color-azul-cianotipia);
+
+  color-scheme: light;
+  font-family: var(--font-sans);
+  color: var(--color-azul-cianotipia);
+  background: var(--color-blanco-ajito);
+  font-synthesis: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+html { scroll-behavior: smooth; scrollbar-color: var(--color-verde-car) var(--color-crema-oscuro); }
+body { margin: 0; min-width: 320px; background: var(--color-blanco-ajito); font-size: 16px; line-height: 1.5; }
+::selection { background: var(--color-amarillo-6pm); color: var(--color-azul-cianotipia); }
+input { caret-color: var(--color-verde-car); accent-color: var(--color-verde-car); }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+ul { margin: 0; padding: 0; list-style: none; }
+[id] { scroll-margin-top: calc(var(--header-h) + 12px); }
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+main:focus, main:focus-visible, h1:focus, [tabindex="-1"]:focus { outline: none; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* `clip` (y no `hidden`) evita el scroll horizontal sin romper el header sticky. */
+.app-shell { overflow-x: clip; }
+
+.container { width: min(100% - 2 * var(--pad-x), var(--container)); margin-inline: auto; }
+
+.skip-link {
+  position: fixed; z-index: 200; top: 8px; left: 8px; padding: 12px 16px; border-radius: var(--radius-btn);
+  background: var(--color-azul-cianotipia); color: var(--color-blanco-ajito); font-weight: 700; font-size: 15px;
+  transform: translateY(-160%); transition: transform .2s;
+}
+.skip-link:focus { transform: translateY(0); --focus: var(--color-amarillo-6pm); }
+
+.is-spinning { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Botones: rectángulo redondeado (12 px), no píldora. */
+.btn {
+  width: fit-content; min-height: 48px; padding: 12px 22px; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  border: 2px solid transparent; border-radius: var(--radius-btn);
+  font-size: var(--fs-ui); font-weight: 600; line-height: 1.2; white-space: nowrap;
+  transition: background-color .2s, color .2s, border-color .2s, transform .2s;
+}
+.btn:active { transform: translateY(1px); }
+.btn-verde { background: var(--color-verde-car); color: var(--color-blanco-ajito); }
+.btn-verde:hover { background: var(--color-verde-oscuro); }
+.btn-crema { background: var(--color-blanco-ajito); color: var(--color-verde-car); }
+.btn-crema:hover { background: #FFFFF4; color: var(--color-verde-oscuro); }
+.btn-borde { border-color: var(--color-verde-car); color: var(--color-verde-oscuro); }
+.btn-borde:hover { background: var(--color-verde-car); color: var(--color-blanco-ajito); }
+
+/* Imagen que no cargó (SafeImage). */
+.image-fallback {
+  width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  background: var(--color-crema-oscuro); color: var(--color-azul-suave); font-size: 13px; font-weight: 600; text-align: center;
+}
+
+/* Link pendiente ("Próximamente"). */
+.is-pending { color: inherit; opacity: .92; }
+.soon-tag {
+  display: inline-block; margin-left: 4px; padding: 2px 7px; border-radius: 6px; vertical-align: .1em;
+  border: 1px solid currentColor; font-size: 13px; font-weight: 600; letter-spacing: .02em; line-height: 1.3;
+}
+
+/* Categorías: un color por tipo de lugar (chips, íconos, etiquetas). Paleta del PDF. */
+.type-parque { --type-color: var(--color-verde-car); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-verde-oscuro); }
+.type-feria { --type-color: var(--color-amarillo-6pm); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-marron-corteza); }
+.type-car { --type-color: var(--color-azul-cianotipia); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-azul-cianotipia); }
+.type-huerta { --type-color: var(--color-marron-corteza); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-marron-corteza); }
+.type-compost { --type-color: var(--color-blanco-ajito); --type-ink: var(--color-marron-corteza); --type-tag-ink: var(--color-marron-corteza); --type-border: var(--color-marron-corteza); }
+
+.category-icon {
+  flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--type-color); color: var(--type-ink); box-shadow: inset 0 0 0 2px var(--type-border, transparent);
+}
+
+/* Página 404 */
+.not-found { padding: clamp(72px, 10vw, 160px) 0; min-height: 60vh; background: var(--color-blanco-ajito); }
+.not-found h1 { max-width: 14ch; color: var(--color-verde-car); font-size: var(--fs-h2-inst); font-weight: 800; line-height: .98; text-transform: uppercase; letter-spacing: var(--track-title); }
+.not-found h1 + p { margin-top: 20px; font-size: var(--fs-body); }
+.not-found-actions { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ───────────────────────── Movimiento reducido ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
