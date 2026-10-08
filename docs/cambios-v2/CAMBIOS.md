@@ -148,8 +148,8 @@ Medida sobre el PDF (artboard de 1920 px), con los tamaños que indicó la dise�
 
 | Rol | Ejemplo | @1920 | Peso | `clamp()` sugerido |
 |---|---|---|---|---|
-| H1 hero Raíces Vecinas | "PLANTATE. / NO SEAS NABO." (en el PDF el H1 era "RAÍCES VECINAS" a ~110 px; como el texto es más largo, bajá un poco el máximo) | ~95–110 px, mayúsculas | 800 | `clamp(48px, 5.2vw, 104px)` |
-| Antetítulo del hero | "RAÍCES VECINAS" | ~22 px, mayúsculas, tracking 0.12em | 800 | `clamp(14px, 1.15vw, 22px)` |
+| H1 hero Raíces Vecinas | "RAÍCES / VECINAS", como en el PDF (*corregido por la clienta: el eslogan pasó a ser el antetítulo*) | ~110 px, mayúsculas | 800 | `clamp(56px, 5.7vw, 110px)` |
+| Antetítulo del hero | "PLANTATE. NO SEAS NABO." (el eslogan) | ~22 px, mayúsculas, tracking 0.12em | 800 | `clamp(14px, 1.15vw, 22px)` |
 | H1 hero Sobre nosotros | "AGRICULTURA URBANA" | ~95 px ("Programa de" ~70 px, 400) | 800 | `clamp(48px, 5vw, 95px)` |
 | H2 de sección | "El PAU está más cerca…", "Sembramos futuro…", "Semillero digital" | ~60 px | 700–800 | `clamp(34px, 3.125vw, 60px)` |
 | H2 institucional | "QUIÉNES SOMOS", "NUESTRAS PROPUESTAS", "OBJETIVOS" | ~90 px, mayúsculas | 800 | `clamp(40px, 4.7vw, 90px)` |

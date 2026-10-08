@@ -7,7 +7,11 @@ const COLLAGE_SIZES = "(max-width: 767px) min(520px, calc(100vw - 40px)), 46vw"
 const collageSet = (format: "avif" | "webp") =>
   [600, 900, 1086].map((width) => `/img/collage-hero-${width}.${format} ${width}w`).join(", ")
 
-/** Hero de "Raíces Vecinas": frases superiores, titular PLANTATE con el tratamiento del PDF y el collage. */
+/**
+ * Hero de "Raíces Vecinas": frases superiores, antetítulo con el eslogan "Plantate. No seas nabo.",
+ * titular "RAÍCES / VECINAS" con el tratamiento del PDF (la segunda línea dentro de un bloque verde)
+ * y el collage.
+ */
 export default function Hero() {
   return (
     <section className="hero has-topo topo-crema" aria-labelledby="hero-title">
@@ -20,8 +24,8 @@ export default function Hero() {
           <div className="hero-copy">
             <p className="hero-kicker">{HERO.antetitulo}</p>
             <h1 id="hero-title" className="hero-title">
-              <span className="hero-title-block">{HERO.titulo.bloque}</span>{" "}
-              <span className="hero-title-rest">{HERO.titulo.resto}</span>
+              <span className="hero-title-top">{HERO.titulo.arriba}</span>{" "}
+              <span className="hero-title-block">{HERO.titulo.bloque}</span>
             </h1>
             <p className="hero-lead">
               <strong>{HERO.bajadaDestacada}</strong>

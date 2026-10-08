@@ -20,16 +20,16 @@
 }
 .hero-kicker::before { content: ""; width: 1.9em; height: 3px; border-radius: 2px; background: currentColor; }
 
-/* Titular con el tratamiento de "RAÍCES / VECINAS" del PDF: la primera línea dentro de un bloque Verde CAR. */
+/* Titular "RAÍCES / VECINAS" del PDF: la segunda línea dentro de un bloque Verde CAR que sobresale a la izquierda. */
 .hero-title {
   color: var(--color-verde-car); font-size: var(--fs-h1); font-weight: 800; line-height: .94;
   letter-spacing: var(--track-title); text-transform: uppercase;
 }
+.hero-title-top { display: block; margin-bottom: .08em; }
 .hero-title-block {
-  display: inline-block; margin: 0 0 .1em -.26em; padding: .1em .26em .05em;
+  display: inline-block; margin: 0 0 0 -.26em; padding: .08em .26em .05em;
   background: var(--color-verde-car); color: var(--color-blanco-ajito);
 }
-.hero-title-rest { display: block; }
 .hero-lead { max-width: 30em; margin-top: clamp(20px, 2vw, 32px); font-size: var(--fs-lead); line-height: 1.45; }
 .hero-lead strong { font-weight: 700; }
 .hero-copy .btn { margin-top: clamp(22px, 2vw, 32px); }

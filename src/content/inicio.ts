@@ -7,9 +7,10 @@ export const FRASES_SUPERIORES = {
 }
 
 export const HERO = {
-  antetitulo: "Raíces Vecinas",
-  /** Titular del sitio: la primera línea va dentro del bloque verde. */
-  titulo: { bloque: "PLANTATE.", resto: "No seas nabo." },
+  /** Eslogan de la campaña: antetítulo chico arriba del titular. */
+  antetitulo: "Plantate. No seas nabo.",
+  /** Titular (<h1>), como en el PDF: "RAÍCES" en Verde CAR y "VECINAS" en crema dentro del bloque verde. */
+  titulo: { arriba: "Raíces", bloque: "Vecinas" },
   bajadaDestacada: "Soberanía alimentaria a la vuelta de tu casa:",
   bajada: " descubrí la red de huertas, parques agroecológicos y ferias de Rosario.",
   boton: "Explorá el mapa",
