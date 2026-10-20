@@ -1,20 +1,20 @@
 import molinoBlanco from "../assets/lugares/molino-blanco.webp"
-import type { IconName } from "../components/iconPaths"
+import pinCar from "../assets/pines/car.png"
+import pinFeria from "../assets/pines/feria.png"
+import pinHuerta from "../assets/pines/huerta.png"
+import pinParque from "../assets/pines/parque-huertas.png"
 import { PALETTE } from "../lib/palette"
 import type { DayCode } from "../lib/schedule"
 
 /*
- * ╔══════════════════════════════════════════════════════════════════════════════════════════╗
- * ║ TODO: reemplazar por la lista oficial del PAU (nombre, categoría, dirección, horario,       ║
- * ║ días de apertura y foto). Los puntos de abajo son DATOS DE EJEMPLO.                         ║
- * ║ Según los números del sitio hay 7 parques huerta, 9 espacios huerta y 1 CAR: la estructura  ║
- * ║ ya está lista para recibirlos (un objeto por punto en `LOCATIONS`). "Huertas" está vacía    ║
- * ║ hasta que llegue la lista real: no inventar puntos.                                         ║
- * ╚══════════════════════════════════════════════════════════════════════════════════════════╝
+ * Lugares del mapa: los 27 puntos de `docs/cambios-v2/huertitas.pdf` (5 huertas, 9 parques huerta,
+ * el CAR y 12 ferias). El PDF trae el nombre, el link de Google Maps y, en las ferias, el día y el
+ * horario; no trae direcciones, fotos ni días de las huertas, los parques y el CAR. Si llegan, se
+ * cargan en cada punto (`address`, `schedule`, `openDays`, `photo`).
  */
 
-export type Category = "Ferias" | "Huertas" | "CAR" | "Parques huertas" | "Compost"
-export type CategorySlug = "feria" | "huerta" | "car" | "parque" | "compost"
+export type Category = "Ferias" | "Huertas" | "CAR" | "Parques huertas"
+export type CategorySlug = "feria" | "huerta" | "car" | "parque"
 
 export interface CategoryMeta {
   slug: CategorySlug
@@ -22,64 +22,48 @@ export interface CategoryMeta {
   label: string
   /** Rótulo largo y accesible. */
   longLabel: string
-  icon: IconName
-  /** Relleno del pin y del círculo del ícono. */
+  /** Pin oficial de la diseñadora (PNG con transparencia, `PIN_ASPECT`). */
+  pin: string
+  /** Color del pin: los chips, las etiquetas y la ficha lo repiten. */
   color: string
-  /** Color del ícono dentro del pin. */
-  iconColor: string
-  /** Borde del pin (solo Compost, que es crema). */
-  stroke?: string
 }
 
-/*
- * Colores e íconos según el PDF (a confirmar con la diseñadora). Compost no está en el PDF: va en
- * crema con borde e ícono Marrón Corteza para no salirse de la paleta de 5 colores.
- */
+/** Proporción de los PNG de los pines (157 × 197 px): la punta queda abajo y centrada, sin margen. */
+export const PIN_ASPECT = 157 / 197
+
+/** Cada color es el del pin que entregó la diseñadora. */
 export const CATEGORIES: Record<Category, CategoryMeta> = {
   Ferias: {
     slug: "feria",
     label: "Ferias",
     longLabel: "Ferias",
-    icon: "pinFeria",
+    pin: pinFeria,
     color: PALETTE.amarillo6pm,
-    iconColor: PALETTE.blancoAjito,
   },
   Huertas: {
     slug: "huerta",
     label: "Huertas",
     longLabel: "Huertas",
-    icon: "pinHuerta",
-    color: PALETTE.marronCorteza,
-    iconColor: PALETTE.blancoAjito,
+    pin: pinHuerta,
+    color: PALETTE.verdeCar,
   },
   CAR: {
     slug: "car",
     label: "CAR",
     longLabel: "Centro Agroecológico Rosario (CAR)",
-    icon: "pinCar",
+    pin: pinCar,
     color: PALETTE.azulCianotipia,
-    iconColor: PALETTE.blancoAjito,
   },
   "Parques huertas": {
     slug: "parque",
     label: "Parques huertas",
     longLabel: "Parques huertas",
-    icon: "pinParque",
-    color: PALETTE.verdeCar,
-    iconColor: PALETTE.blancoAjito,
-  },
-  Compost: {
-    slug: "compost",
-    label: "Compost",
-    longLabel: "Puntos de compost",
-    icon: "compost",
-    color: PALETTE.blancoAjito,
-    iconColor: PALETTE.marronCorteza,
-    stroke: PALETTE.marronCorteza,
+    pin: pinParque,
+    color: PALETTE.marronCorteza,
   },
 }
 
-/** Orden de los chips: Todo · Ferias · Huertas · CAR · Parques huertas · Compost. */
+/** Orden de los chips: Todo · Ferias · Huertas · CAR · Parques huertas. */
 export const CATEGORY_LIST = Object.keys(CATEGORIES) as Category[]
 
 export interface Photo {
@@ -103,9 +87,11 @@ export interface Location {
   id: number
   name: string
   type: Category
-  district: string
-  schedule: string
-  address: string
+  /** Dirección. El PDF no trae: la ficha muestra solo la distancia hasta que se cargue. */
+  address?: string
+  /** Día y horario tal como los publica el PDF (solo las ferias lo tienen). */
+  schedule?: string
+  /** Días de apertura, para el cartel "Abierto hoy". Vacío si no se conocen. */
   openDays: DayCode[]
   lat: number
   lng: number
@@ -113,95 +99,123 @@ export interface Location {
 }
 
 /*
- * Coordenadas fijas, obtenidas una sola vez en desarrollo (octubre de 2026) con Nominatim y
- * OpenStreetMap, y verificadas con geocodificación inversa. No se geocodifica en tiempo de ejecución.
- * TODO: fotos reales de cada punto (salvo Molino Blanco, las actuales son de stock de Unsplash).
+ * TODO: fotos reales de cada punto. Hasta que lleguen, cada categoría usa una foto de stock de
+ * Unsplash (son las mismas que tenían los puntos de ejemplo); solo Molino Blanco tiene foto real.
  * Las fotos se muestran en blanco y negro (filtro CSS).
  */
-export const LOCATIONS: Location[] = [
-  {
-    id: 1,
-    name: "Parque Huerta Molino Blanco",
-    type: "Parques huertas",
-    district: "Distrito Sur · Barrio Molino Blanco",
-    schedule: "Mar a sáb · 8:00 a 13:00",
-    address: "Ayacucho 4800, Rosario",
-    openDays: ["MAR", "MIÉ", "JUE", "VIE", "SÁB"],
-    // Centro del área "Parque Huerta Molino Blanco" en OSM, sobre Ayacucho. OSM ubica el predio
-    // en el barrio Pte. Roque Sáenz Peña (zona Molino Blanco), Distrito Sur.
-    lat: -33.0133587,
-    lng: -60.6366421,
-    // Foto real (del PDF). TODO: pedir una versión de mayor resolución (la actual mide 461 px).
-    photo: {
-      src: molinoBlanco,
-      alt: "Canteros del Parque Huerta Molino Blanco con acelgas y arcos de invernáculo",
-    },
-  },
-  {
-    id: 2,
-    name: "Feria Plaza Alberdi",
-    type: "Ferias",
-    district: "Distrito Norte · Alberdi",
-    schedule: "Sábados · 9:00 a 13:00",
-    address: "Bv. Rondeau y Puccio, Rosario",
-    openDays: ["SÁB"],
-    // Plaza Alberdi (OSM), junto a la esquina de Bv. Rondeau y Puccio. Barrio Alberdi, Distrito Norte.
-    lat: -32.895002,
-    lng: -60.6930895,
-    photo: unsplash("1764001032216-360a43576788", "Puesto de feria con verduras de hoja recién cosechadas", 640, 480),
-  },
-  {
-    id: 3,
-    name: "Centro Agroecológico Rosario",
-    type: "CAR",
-    district: "Distrito Oeste · Godoy",
-    schedule: "Lun a vie · 8:30 a 16:00",
-    address: "Pte. Perón 8000, Rosario",
-    openDays: ["LUN", "MAR", "MIÉ", "JUE", "VIE"],
-    // TODO: verificar coordenada. Es la altura 8000 de Av. Pte. Perón, interpolada a partir de las
-    // direcciones 7800 y 7900 cargadas en OSM (barrio Godoy, Distrito Oeste), pero en OSM no hay
-    // ningún "Centro Agroecológico" en esa cuadra que confirme la ubicación.
-    lat: -32.9773726,
-    lng: -60.7304003,
-    photo: unsplash(
-      "1770982699024-31edd9a6d4d3",
-      "Canteros con plantines y carteles escritos a mano dentro de un invernadero",
-      640,
-      480,
-    ),
-  },
-  {
-    id: 4,
-    name: "Parque Huerta La Tablada",
-    type: "Parques huertas",
-    district: "Distrito Sur · Tablada",
-    schedule: "Lun a vie · 8:00 a 12:30",
-    address: "Gutiérrez y Cepeda, Rosario",
-    openDays: ["LUN", "MAR", "MIÉ", "JUE", "VIE"],
-    // Centro del área "Parque Huerta La Tablada" en OSM (barrio Esteban Echeverría, Distrito Sur).
-    // Ojo: la esquina Gutiérrez y Cepeda no existe como cruce en OSM; el predio queda ~450 m al
-    // este de Cepeda, a la altura de Gutiérrez. Conviene revisar la dirección publicada.
-    lat: -32.99451,
-    lng: -60.6200792,
-    photo: unsplash("1788538812809-f22af3a6993a", "Dos personas trabajando entre canteros elevados de madera", 640, 480),
-  },
-  {
-    id: 5,
-    name: "Compost Comunitario Ludueña",
-    type: "Compost",
-    district: "Distrito Noroeste · Ludueña",
-    schedule: "Mié y vie · 16:00 a 19:00",
-    address: "Vélez Sarsfield 6100, Rosario",
-    openDays: ["MIÉ", "VIE"],
-    // TODO: verificar coordenada. La dirección existe en OSM (Vélez Sarsfield 6100, Distrito
-    // Noroeste), pero cae en el barrio Empalme Graneros, a ~1,6 km del centro de Ludueña.
-    lat: -32.9257726,
-    lng: -60.7063867,
-    photo: unsplash(
-      "1781785273371-a959f34bfab0",
-      "Grupo de vecinos trabajando la tierra en una huerta comunitaria",
-      640,
-      480,
-    ),
-  },
+const CATEGORY_PHOTOS: Record<Category, Photo> = {
+  Ferias: unsplash("1764001032216-360a43576788", "Puesto de feria con verduras de hoja recién cosechadas", 640, 480),
+  Huertas: unsplash(
+    "1781785273371-a959f34bfab0",
+    "Grupo de vecinos trabajando la tierra en una huerta comunitaria",
+    640,
+    480,
+  ),
+  CAR: unsplash(
+    "1770982699024-31edd9a6d4d3",
+    "Canteros con plantines y carteles escritos a mano dentro de un invernadero",
+    640,
+    480,
+  ),
+  "Parques huertas": unsplash("1788538812809-f22af3a6993a", "Dos personas trabajando entre canteros elevados de madera", 640, 480),
+}
+
+/** Foto real de Molino Blanco (del PDF de la diseñadora). TODO: pedir una versión de mayor resolución (mide 461 px). */
+const MOLINO_BLANCO_PHOTO: Photo = {
+  src: molinoBlanco,
+  alt: "Canteros del Parque Huerta Molino Blanco con acelgas y arcos de invernáculo",
+}
+
+type Seed = Omit<Location, "id" | "type" | "photo"> & { photo?: Photo }
+
+/** Una feria de `huertitas.pdf`: un solo día de la semana y el horario tal cual está publicado. */
+const feria = (name: string, lat: number, lng: number, day: DayCode, dayName: string, hours: string): Seed => ({
+  name,
+  schedule: `${dayName} · ${hours}`,
+  openDays: [day],
+  lat,
+  lng,
+})
+
+/** Un punto sin día ni horario en el PDF. */
+const place = (name: string, lat: number, lng: number): Seed => ({ name, openDays: [], lat, lng })
+
+/*
+ * Coordenadas: las del pin de cada link de Google Maps del PDF (se leyeron una sola vez, en octubre
+ * de 2026, del `!3d…!4d…` de la URL a la que redirige el link corto). No se geocodifica en tiempo
+ * de ejecución. Donde el nombre de Google Maps no coincide con el del PDF, queda anotado.
+ *
+ * Los nombres de "Parque Huerta" llevan el prefijo porque el PDF los lista debajo de ese título.
+ * "Huerta Los Horneritos" también está bajo "Parque Huerta" y se conserva como figura.
+ */
+const PARQUES_HUERTAS: Seed[] = [
+  // Primero, porque arranca seleccionado (como en el diseño) y es el único con foto real.
+  { ...place("Parque Huerta Molino Blanco", -33.0131684, -60.6363995), photo: MOLINO_BLANCO_PHOTO },
+  place("Parque Huerta Tablada", -32.9946497, -60.6203391),
+  place("Parque Huerta El Ceibo", -33.0148244, -60.6384362),
+  place("Parque Huerta Hogar Español", -32.9940522, -60.6882288),
+  place("Parque Huerta SudOeste", -32.9917561, -60.6873494),
+  place("Parque Huerta Bosque de los Constituyentes", -32.9028288, -60.7358477),
+  place("Parque Huerta Norte", -32.8945744, -60.7259483),
+  // Google Maps: "Huerta Paihuen/Las dos Rosas".
+  place("Parque Huerta Corredor Verde", -32.8927033, -60.6989027),
+  // Google Maps: "Huerta el Hornero".
+  place("Huerta Los Horneritos", -32.8928507, -60.7229624),
 ]
+
+const HUERTAS: Seed[] = [
+  // Google Maps: "Corredor Verde «Huerta Grande»".
+  place("Corredor Vías Verdes", -32.8836158, -60.7021767),
+  place("Plaza Suecia", -32.9317916, -60.6499382),
+  // Google Maps: "Centro Cuidar CIC Cerámica".
+  place("CIC Norte", -32.8869358, -60.7051197),
+  // Google Maps: "Plaza Rageylo".
+  place("El Obrador", -32.9799453, -60.698462),
+  // Google Maps: "Hospital «Intendente Gabriel Carrasco»".
+  place("Hospital Carrasco", -32.9464183, -60.6811664),
+]
+
+const CENTROS_AGROECOLOGICOS: Seed[] = [
+  // Google Maps: "Centro Agroecológico Rosario - Vivero Agroecológico de Tablada".
+  place("Centro Agroecológico de Rosario", -32.9959947, -60.6238383),
+]
+
+const FERIAS: Seed[] = [
+  feria("Plaza San Martín", -32.9436573, -60.6496895, "LUN", "Lunes", "9:00 a 13:00 / 14:00 hs"),
+  feria("Centro Municipal Distrito Centro", -32.9366083, -60.6414041, "MAR", "Martes", "9:00 a 14:00 hs"),
+  // Google Maps: "Facultad de Ciencias Médicas - Universidad Nacional de Rosario".
+  feria("Mercado Universitario", -32.9400117, -60.6651234, "MIÉ", "Miércoles", "9:00 a 14:00 hs"),
+  // Google Maps: "Monumento a Ovidio Lagos".
+  feria("Pellegrini y Ovidio Lagos", -32.9533282, -60.6645209, "MIÉ", "Miércoles", "9:30 a 13:00 hs"),
+  feria("Plazoleta Alicia Moreau de Justo", -32.9455077, -60.6512817, "JUE", "Jueves", "9:00 a 14:00 hs"),
+  feria("Plaza de la Cooperación", -32.9415429, -60.638259, "VIE", "Viernes", "9:00 a 14:00 hs"),
+  feria("Plaza Alberdi", -32.8951918, -60.6921971, "VIE", "Viernes", "9:00 a 13:30 hs"),
+  // Google Maps: "Av. Belgrano 658".
+  feria("Monumento a la Bandera", -32.9460941, -60.6317628, "VIE", "Viernes", "11:00 a 13:30 hs"),
+  // Google Maps: "Feria de Vegetales". Queda a ~25 m de la huerta "Plaza Suecia".
+  feria("Plaza Suecia", -32.9319028, -60.6501213, "DOM", "Domingo", "8:30 a 13:00 hs"),
+  // Google Maps: "Las 4 Plazas (Parque Mitre)". El PDF publica los dos horarios, sin aclarar cuándo rige cada uno.
+  feria(
+    "Cuatro Plazas",
+    -32.9402421,
+    -60.7126104,
+    "DOM",
+    "Domingo",
+    "15:00 a 18:30 hs (en invierno/primavera) o 16:00 a 19:00 hs",
+  ),
+  // Google Maps: "Feria «La Pergola»".
+  feria("La Pérgola", -32.9348447, -60.6419469, "DOM", "Domingo", "15:00 a 18:30 hs"),
+  // Google Maps: "Rondó Bar".
+  feria("Feria de Costa Alta", -32.8781452, -60.6975776, "DOM", "Domingo", "10:00 a 13:00 hs"),
+]
+
+const withType = (type: Category, seeds: Seed[]) =>
+  seeds.map((seed) => ({ ...seed, type, photo: seed.photo ?? CATEGORY_PHOTOS[type] }))
+
+/** El orden es el de las sugerencias sin ubicación del usuario; el primero arranca seleccionado. */
+export const LOCATIONS: Location[] = [
+  ...withType("Parques huertas", PARQUES_HUERTAS),
+  ...withType("Huertas", HUERTAS),
+  ...withType("CAR", CENTROS_AGROECOLOGICOS),
+  ...withType("Ferias", FERIAS),
+].map((location, index) => ({ ...location, id: index + 1 }))

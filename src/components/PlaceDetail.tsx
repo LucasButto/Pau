@@ -2,6 +2,7 @@ import { CATEGORIES } from "../data/locations"
 import type { DirectoryEntry } from "../hooks/useDirectory"
 import { directionsUrl, formatDistance } from "../lib/geo"
 import { DAY_NAMES, openStatus } from "../lib/schedule"
+import CategoryPin from "./CategoryPin"
 import Icon from "./Icon"
 import SafeImage from "./SafeImage"
 
@@ -76,34 +77,39 @@ export default function PlaceDetail({ entry, distanceFrom, searching, onClear }:
                   </>
                 )}
               </span>
-              <span className={status.openToday ? "open-badge is-open" : "open-badge"}>
-                {status.openToday
-                  ? "Abierto hoy"
-                  : status.nextDay
-                    ? `Abre el ${DAY_NAMES[status.nextDay]}`
-                    : "Sin días cargados"}
-              </span>
+              {/* Sin días cargados (huertas, parques y CAR en el PDF) no hay cartel. */}
+              {status.nextDay && (
+                <span className={status.openToday ? "open-badge is-open" : "open-badge"}>
+                  {status.openToday ? "Abierto hoy" : `Abre el ${DAY_NAMES[status.nextDay]}`}
+                </span>
+              )}
             </div>
             <h3 id={titleId} className="place-name">
-              <span className={`category-icon type-${meta.slug}`} aria-hidden="true">
-                <Icon name={meta.icon} size={20} strokeWidth={1.5} />
-              </span>
+              <CategoryPin category={location.type} height={34} />
               <span>{location.name}</span>
             </h3>
             <div className="place-data">
               <p className="place-line">
                 <Icon name="location" size={17} />
-                <span>
-                  {location.address}
-                  <small className="place-distance">
+                {location.address ? (
+                  <span>
+                    {location.address}
+                    <small className="place-distance">
+                      {formatDistance(distanceKm)} {distanceFrom}
+                    </small>
+                  </span>
+                ) : (
+                  <span>
                     {formatDistance(distanceKm)} {distanceFrom}
-                  </small>
-                </span>
+                  </span>
+                )}
               </p>
-              <p className="place-line">
-                <Icon name="clock" size={17} />
-                <span>{location.schedule}</span>
-              </p>
+              {location.schedule && (
+                <p className="place-line">
+                  <Icon name="clock" size={17} />
+                  <span>{location.schedule}</span>
+                </p>
+              )}
             </div>
           </div>
         </div>

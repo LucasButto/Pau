@@ -104,17 +104,14 @@ main:focus, main:focus-visible, h1:focus, [tabindex="-1"]:focus { outline: none;
   border: 1px solid currentColor; font-size: 13px; font-weight: 600; letter-spacing: .02em; line-height: 1.3;
 }
 
-/* Categorías: un color por tipo de lugar (chips, íconos, etiquetas). Paleta del PDF. */
-.type-parque { --type-color: var(--color-verde-car); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-verde-oscuro); }
-.type-feria { --type-color: var(--color-amarillo-6pm); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-marron-corteza); }
-.type-car { --type-color: var(--color-azul-cianotipia); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-azul-cianotipia); }
-.type-huerta { --type-color: var(--color-marron-corteza); --type-ink: var(--color-blanco-ajito); --type-tag-ink: var(--color-marron-corteza); }
-.type-compost { --type-color: var(--color-blanco-ajito); --type-ink: var(--color-marron-corteza); --type-tag-ink: var(--color-marron-corteza); --type-border: var(--color-marron-corteza); }
+/* Categorías: un color por tipo de lugar (chips y etiquetas). Son los colores de los pines oficiales. */
+.type-parque { --type-color: var(--color-marron-corteza); --type-tag-ink: var(--color-marron-corteza); }
+.type-feria { --type-color: var(--color-amarillo-6pm); --type-tag-ink: var(--color-marron-corteza); }
+.type-car { --type-color: var(--color-azul-cianotipia); --type-tag-ink: var(--color-azul-cianotipia); }
+.type-huerta { --type-color: var(--color-verde-car); --type-tag-ink: var(--color-verde-oscuro); }
 
-.category-icon {
-  flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%;
-  background: var(--type-color); color: var(--type-ink); box-shadow: inset 0 0 0 2px var(--type-border, transparent);
-}
+/* Pin oficial de la categoría (ficha y sugerencias): mismo PNG que usa el mapa. */
+.category-pin { flex: none; display: block; }
 
 /* Página 404 */
 .not-found { padding: clamp(72px, 10vw, 160px) 0; min-height: 60vh; background: var(--color-blanco-ajito); }

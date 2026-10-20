@@ -57,12 +57,12 @@ export const PAGES: Record<PageId, PageConfig> = {
     path: isMapHome ? "/" : "/raices-vecinas",
     name: "Raíces Vecinas",
     seo: {
-      title: "Huertas, ferias y compost en Rosario | PLANTATE · PAU",
+      title: "Huertas, ferias y parques huerta en Rosario | PLANTATE · PAU",
       description:
-        "Encontrá parques huerta, huertas, ferias, el Centro Agroecológico (CAR) y puntos de compost del Programa de Agricultura Urbana de Rosario. Mapa y horarios.",
+        "Encontrá parques huerta, huertas, ferias y el Centro Agroecológico (CAR) del Programa de Agricultura Urbana de Rosario. Mapa, días y horarios de las ferias.",
       ogTitle: "PLANTATE. No seas nabo. · Huertas y ferias de Rosario",
       ogDescription:
-        "Mapa de parques huerta, huertas, ferias, el Centro Agroecológico (CAR) y puntos de compost del Programa de Agricultura Urbana de Rosario.",
+        "Mapa de parques huerta, huertas, ferias y el Centro Agroecológico (CAR) del Programa de Agricultura Urbana de Rosario.",
     },
     preload: {
       type: "image/avif",

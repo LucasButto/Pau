@@ -1,6 +1,7 @@
 import { useId, useRef, useState, type KeyboardEvent } from "react"
 import { CATEGORIES, CATEGORY_LIST } from "../data/locations"
 import type { CategoryFilter, DirectoryEntry } from "../hooks/useDirectory"
+import CategoryPin from "./CategoryPin"
 import Icon from "./Icon"
 
 interface SearchAndFiltersProps {
@@ -145,14 +146,10 @@ export default function SearchAndFilters({
                 onMouseMove={() => setActive(index)}
                 onClick={() => choose(entry)}
               >
-                <span className={`category-icon type-${meta.slug}`} aria-hidden="true">
-                  <Icon name={meta.icon} size={18} strokeWidth={1.5} />
-                </span>
+                <CategoryPin category={location.type} height={32} />
                 <span className="suggestion-text">
                   <strong>{location.name}</strong>
-                  <span>
-                    {meta.longLabel} · {location.district}
-                  </span>
+                  <span>{meta.longLabel}</span>
                 </span>
               </li>
             )

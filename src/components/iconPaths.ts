@@ -44,7 +44,7 @@ export const ICON_PATHS = {
     ["path", { d: "M10 6v4l3 2" }],
   ],
   close: [["path", { d: "m5 5 10 10M15 5 5 15" }]],
-  // Compost: se conserva el ícono del sitio anterior (puntos de compost).
+  // Compost: ícono del fanzine de compostaje (guías del Semillero).
   compost: [
     ["path", { d: "M7 15c-3-2-3-7 0-10 4 0 7 3 7 7-2 3-5 4-7 3Z" }],
     ["path", { d: "M6 16c2-4 4-6 7-8" }],
@@ -100,7 +100,9 @@ export const ICON_PATHS = {
   ],
 
   /*
-   * Íconos de categoría (pines, ficha, sugerencias y chips). Dibujados a partir de img/11 del PDF.
+   * Íconos lineales con forma de planta: estado de carga del mapa, ficha vacía, newsletter y guías.
+   * Los pines de cada categoría ya no son íconos de trazo: son los PNG oficiales (`src/assets/pines`,
+   * ver `data/locations.ts`).
    * TODO: reemplazar cada uno por el SVG oficial de la diseñadora (alcanza con cambiar los paths).
    */
   // TODO: SVG oficial. Parques huertas: brote con dos hojas sobre la tierra.
@@ -110,22 +112,6 @@ export const ICON_PATHS = {
     ["path", { d: "M10 11.6C8.6 9.5 6.1 8.8 3.6 9.7c1.4 2.2 4 2.8 6.4 1.9Z" }],
     ["path", { d: "M10 11.6c1.4-2.1 3.9-2.8 6.4-1.9-1.4 2.2-4 2.8-6.4 1.9Z" }],
     ["path", { d: "M3.6 16.8a1.3 1.1 0 0 1 2.6 0 1.3 1.1 0 0 1 2.6 0 1.3 1.1 0 0 1 2.6 0 1.3 1.1 0 0 1 2.6 0 1.3 1.1 0 0 1 2.6 0" }],
-  ],
-  // TODO: SVG oficial. Ferias: puesto de feria con toldo y una persona.
-  pinFeria: [
-    ["path", { d: "M2.8 7.4 10 3l7.2 4.4Z" }],
-    ["path", { d: "M4.4 7.4v9.2M15.6 7.4v9.2" }],
-    ["circle", { cx: 10, cy: 9.7, r: 1.6 }],
-    ["path", { d: "M7.2 13.4c0-1.7 1.2-2.4 2.8-2.4s2.8.7 2.8 2.4" }],
-    ["rect", { x: 3, y: 13.4, width: 14, height: 3.2, rx: 0.3 }],
-  ],
-  // TODO: SVG oficial. CAR: tres hojas, como el isotipo.
-  pinCar: [
-    ["path", { d: "M9.6 16C6.9 13.2 6.5 7.6 8.4 3c2.6 3.3 3.1 8.8 1.2 13Z" }],
-    ["path", { d: "M8.4 3.6c.3 4.1.7 8.2 1.2 12.4" }],
-    ["path", { d: "M9.3 16.4C5.4 16.4 3 13.7 2.6 9.6c3.8.4 6.3 3 6.7 6.8Z" }],
-    ["path", { d: "M10.2 16.4c.3-4.8 3.4-8.1 7.3-8.6-.3 4.9-3.1 8.3-7.3 8.6Z" }],
-    ["path", { d: "M10.2 16.4c1.9-3 4.3-5.7 7.3-8.6" }],
   ],
   // TODO: SVG oficial. Huertas: planta que sale de una maceta con tierra.
   pinHuerta: [

@@ -22,7 +22,7 @@ const normalize = (text: string) =>
     .toLowerCase()
     .trim()
 
-/** Búsqueda sin mayúsculas ni acentos: "ludueña" encuentra "Ludueña", "centro agro" encuentra el CAR. */
+/** Búsqueda sin mayúsculas ni acentos: "pergola" encuentra "La Pérgola", "centro agro" encuentra el CAR. */
 export function filterLocations(
   locations: readonly Location[],
   query: string,
@@ -33,7 +33,7 @@ export function filterLocations(
     if (category !== "all" && location.type !== category) return false
     if (!terms.length) return true
     const haystack = normalize(
-      `${location.name} ${location.district} ${CATEGORIES[location.type].longLabel} ${location.address}`,
+      [location.name, CATEGORIES[location.type].longLabel, location.address].filter(Boolean).join(" "),
     )
     return terms.every((term) => haystack.includes(term))
   })
