@@ -12,12 +12,13 @@
 /* Tarjeta Blanco Ajito: barra arriba, ficha a la izquierda y mapa a la derecha. */
 .map-card {
   --focus: var(--color-azul-cianotipia);
+  --map-pad: clamp(14px, 1.2vw, 20px);
   border-radius: var(--radius-card); background: var(--color-blanco-ajito); color: var(--color-azul-cianotipia);
   scroll-margin-top: calc(var(--header-h) + 12px);
 }
 
 /* Barra: buscador "Buscá por nombre" + chips de categoría */
-.map-filters { position: relative; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: clamp(14px, 1.2vw, 20px); }
+.map-filters { position: relative; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: var(--map-pad); }
 .map-search {
   position: relative; flex: 0 1 360px; min-width: 240px; min-height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 4px 0 16px;
   border-radius: var(--radius-chip); background: var(--color-crema-oscuro); color: var(--color-verde-oscuro);
@@ -61,6 +62,15 @@
   display: grid; grid-template-columns: clamp(300px, 28%, 380px) minmax(0, 1fr); height: clamp(480px, 38vw, 640px);
   border-radius: 0 0 var(--radius-card) var(--radius-card); overflow: hidden;
 }
+/*
+ * Notebook: la tarjeta entera (buscador + ficha + mapa) tiene que entrar en una pantalla cuando el
+ * ancla #mapa la deja debajo del header. Al alto de la ventana se le restan el header, 12 px arriba y
+ * 12 px abajo, y la barra del buscador (52 px + su padding). En pantallas altas manda el alto de
+ * siempre; en las bajas (1366×768, 1280×720) el mapa se achica hasta 420 px.
+ */
+@media (min-width: 1024px) {
+  .map-body { height: clamp(420px, min(38vw, 100svh - var(--header-h) - 24px - 52px - 2 * var(--map-pad)), 640px); }
+}
 
 /* Ficha del lugar */
 .place-panel { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--color-blanco-ajito); }
@@ -77,7 +87,7 @@
 }
 /* La foto ocupa el alto que sobra (más vertical, como en el PDF); si los datos no entran, scrollea todo. */
 .place-scroll { display: flex; flex-direction: column; }
-.place-media { position: relative; flex: 1 1 0; min-height: 150px; overflow: hidden; background: var(--color-crema-oscuro); }
+.place-media { position: relative; flex: 1 1 0; min-height: 120px; overflow: hidden; background: var(--color-crema-oscuro); }
 .place-media img, .place-media .image-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .place-media img { filter: grayscale(1) contrast(1.08); }
 .place-body { flex: none; padding: 16px clamp(16px, 1.3vw, 22px) 18px; }
@@ -194,7 +204,7 @@
   .map-search { flex: none; }
   .chip-row {
     flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none;
-    margin: 0 calc(clamp(14px, 1.2vw, 20px) * -1); padding: 2px clamp(14px, 1.2vw, 20px);
+    margin: 0 calc(var(--map-pad) * -1); padding: 2px var(--map-pad);
     scroll-padding-inline: 16px; mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
   }
   .chip-row::-webkit-scrollbar { display: none; }
