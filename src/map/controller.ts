@@ -12,7 +12,9 @@ import {
   SOURCE_SELECTED,
   SOURCE_USER,
   addPauLayers,
+  applyClusterTheme,
   bindInteractions,
+  clusterThemeFor,
   locationsToGeoJSON,
   userToGeoJSON,
   type Tooltip,
@@ -206,7 +208,7 @@ export async function createMapController(
   let popup: maplibregl.Popup | null = null
   const tooltip: Tooltip | null = canHover
     ? {
-        show(coordinates, text, offsetY) {
+        show(coordinates, text, offsetY, cluster = false) {
           popup ??= new maplibregl.Popup({
             anchor: "bottom",
             closeButton: false,
@@ -217,6 +219,9 @@ export async function createMapController(
 
           popup.setOffset([0, -offsetY]).setLngLat(coordinates).setText(text)
           if (!popup.isOpen()) popup.addTo(map)
+          // Las clases solo se pueden tocar con el popup ya en el mapa (tiene contenedor).
+          if (cluster) popup.addClassName("is-cluster")
+          else popup.removeClassName("is-cluster")
         },
         hide() {
           popup?.remove()
@@ -251,6 +256,7 @@ export async function createMapController(
 
   return {
     setData(locations, selectedId) {
+      applyClusterTheme(map, clusterThemeFor(locations))
       const selected = locations.find((location) => location.id === selectedId)
       map
         .getSource<GeoJSONSource>(SOURCE_POINTS)

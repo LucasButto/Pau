@@ -50,6 +50,36 @@ export const LAYER_USER = "pau-user-dot"
 
 export const CLUSTER_MAX_ZOOM = 13
 
+/** Colores de los grupos (círculo, halo, número) y de su cartelito. */
+export interface ClusterTheme {
+  color: string
+  ink: string
+}
+
+/** Sin filtro (o con varias categorías a la vez): Verde CAR, como siempre. */
+const DEFAULT_CLUSTER_THEME: ClusterTheme = { color: PALETTE.verdeCar, ink: PALETTE.blancoAjito }
+
+/** Si todos los puntos son de una sola categoría (filtro activo), los grupos toman su color. */
+export function clusterThemeFor(locations: readonly Location[]): ClusterTheme {
+  const first = locations[0]
+  if (!first || locations.some((location) => location.type !== first.type)) return DEFAULT_CLUSTER_THEME
+  const { color, ink } = CATEGORIES[first.type]
+  return { color, ink }
+}
+
+/**
+ * Pinta los grupos con `theme`. El cartelito es HTML fuera del canvas: lo recibe por variables CSS
+ * en el contenedor del mapa (`--cluster-color` y `--cluster-ink`, ver `mapa.css`).
+ */
+export function applyClusterTheme(map: MapLibreMap, { color, ink }: ClusterTheme): void {
+  map.setPaintProperty(LAYER_CLUSTER_HALO, "circle-color", color)
+  map.setPaintProperty(LAYER_CLUSTERS, "circle-color", color)
+  map.setPaintProperty(LAYER_CLUSTER_COUNT, "text-color", ink)
+  const container = map.getContainer()
+  container.style.setProperty("--cluster-color", color)
+  container.style.setProperty("--cluster-ink", ink)
+}
+
 export interface PinProperties {
   id: number
   name: string
@@ -233,7 +263,8 @@ export function addPauLayers(map: MapLibreMap, fonts: StyleFonts): void {
 }
 
 export interface Tooltip {
-  show(coordinates: [number, number], text: string, offsetY: number): void
+  /** `cluster`: el cartelito de un grupo, que toma el color de la categoría. */
+  show(coordinates: [number, number], text: string, offsetY: number, cluster?: boolean): void
   hide(): void
 }
 
@@ -297,10 +328,11 @@ export function bindInteractions(
     layer: string,
     offsetY: number,
     label: (event: MapLayerMouseEvent) => string,
+    cluster = false,
   ) => {
     map.on("mousemove", layer, (event) => {
       const coordinates = featureCoordinates(event)
-      if (coordinates) tooltip.show(coordinates, label(event), offsetY)
+      if (coordinates) tooltip.show(coordinates, label(event), offsetY, cluster)
     })
   }
 
@@ -312,10 +344,15 @@ export function bindInteractions(
     String(event.features?.[0]?.properties?.name ?? ""),
   )
 
-  showFor(LAYER_CLUSTERS, 30, (event) => {
-    const count = Number(event.features?.[0]?.properties?.point_count ?? 0)
-    return `${count} lugares · click para acercar`
-  })
+  showFor(
+    LAYER_CLUSTERS,
+    30,
+    (event) => {
+      const count = Number(event.features?.[0]?.properties?.point_count ?? 0)
+      return `${count} lugares · click para acercar`
+    },
+    true,
+  )
 
   map.on("dragstart", () => tooltip.hide())
 }

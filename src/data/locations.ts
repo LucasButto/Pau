@@ -26,6 +26,8 @@ export interface CategoryMeta {
   pin: string
   /** Color del pin: los chips, las etiquetas y la ficha lo repiten. */
   color: string
+  /** Color del texto sobre `color` con contraste suficiente (grupos del mapa y su cartelito). */
+  ink: string
 }
 
 /** Proporción de los PNG de los pines (157 × 197 px): la punta queda abajo y centrada, sin margen. */
@@ -39,6 +41,7 @@ export const CATEGORIES: Record<Category, CategoryMeta> = {
     longLabel: "Ferias",
     pin: pinFeria,
     color: PALETTE.amarillo6pm,
+    ink: PALETTE.marronCorteza,
   },
   Huertas: {
     slug: "huerta",
@@ -46,6 +49,7 @@ export const CATEGORIES: Record<Category, CategoryMeta> = {
     longLabel: "Huertas",
     pin: pinHuerta,
     color: PALETTE.verdeCar,
+    ink: PALETTE.blancoAjito,
   },
   CAR: {
     slug: "car",
@@ -53,6 +57,7 @@ export const CATEGORIES: Record<Category, CategoryMeta> = {
     longLabel: "Centro Agroecológico Rosario (CAR)",
     pin: pinCar,
     color: PALETTE.azulCianotipia,
+    ink: PALETTE.blancoAjito,
   },
   "Parques huertas": {
     slug: "parque",
@@ -60,6 +65,7 @@ export const CATEGORIES: Record<Category, CategoryMeta> = {
     longLabel: "Parques huertas",
     pin: pinParque,
     color: PALETTE.marronCorteza,
+    ink: PALETTE.blancoAjito,
   },
 }
 

@@ -192,6 +192,9 @@
   box-shadow: 0 4px 14px rgb(19 62 69 / .25); font: 700 14px/1.25 var(--font-sans);
 }
 .map-canvas .map-tooltip .maplibregl-popup-tip { border-top-color: var(--color-azul-cianotipia); }
+/* Cartelito de un grupo: del color de la categoría (lo fija `applyClusterTheme`; Verde CAR si hay varias). */
+.map-canvas .map-tooltip.is-cluster .maplibregl-popup-content { background: var(--cluster-color, var(--color-verde-car)); color: var(--cluster-ink, var(--color-blanco-ajito)); }
+.map-canvas .map-tooltip.is-cluster .maplibregl-popup-tip { border-top-color: var(--cluster-color, var(--color-verde-car)); }
 
 @media (max-width: 1279px) {
   .map-control-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
