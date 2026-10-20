@@ -144,3 +144,12 @@
 *.stl                filter=lfs diff=lfs merge=lfs -text
 *.nc                 filter=lfs diff=lfs merge=lfs -text
 *.mat                filter=lfs diff=lfs merge=lfs -text
+
+# ---------------------------------------------------------------------------
+# Archivos que sirve el sitio: archivos normales de git, NO LFS.
+# Vercel no descarga LFS por defecto y publicaba los punteros en vez de las imagenes.
+# Van al final para ganarle a las reglas de arriba. Pesan ~1 MB en total.
+# ---------------------------------------------------------------------------
+/src/assets/** binary -filter
+/public/** binary -filter
+/public/**/*.md text=auto
